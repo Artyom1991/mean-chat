@@ -1,6 +1,6 @@
 #Simple nodejs chat on MEAN stack.
 
-    Allow users to register in and chat with each other.
+Allow users to register in and chat with each other.
 
 Uses Node.js, MongoDB (mongoose) on mLab, Express, Angular. For deploying on Heroku.
 

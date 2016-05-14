@@ -10,9 +10,41 @@
     <script src="js/angular.js"></script>
     <script src="js/jquery-2.2.3.js"></script>
     <script src="js/bootstrap.js"></script>
+    <!---->
+    <script src="js/nav-bar.js"></script>
+    <script src="js/admin/admin-page.js"></script>
 
 </head>
-<body>
-<h1>Hello world!</h1>
+<body ng-app="AdminPageApp">
+<div class="container">
+    <header>
+        <!--navigation bar-->
+        <div id="navBarContainer"></div>
+    </header>
+    <article class="row">
+        <section class="col-sm-3">
+            <!--admin control panel-->
+            <ul class="nav">
+                <li><a href="">Users</a></li>
+                <li><a href="" onclick="">Users API tests</a></li>
+            </ul>
+        </section>
+
+        <section class="col-sm-9">
+            <!--AngularJS SPA CRUD table-->
+            <table class="table table-striped" ng-controller="usersTableCtrl">
+                <tr ng-repeat="user in users">
+                    <td>{{ user._id }}</td>
+                    <td>{{ user.login }}</td>
+                    <td>{{ user.email }}</td>
+                </tr>
+            </table>
+        </section>
+    </article>
+</div>
 </body>
+<script>
+    //render nav-bar
+    NavigationBar.renderIn("navBarContainer");
+</script>
 </html>

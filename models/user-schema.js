@@ -18,4 +18,3 @@ var userSchema = new mongoose.Schema({
 });
 
 mongoose.model('UserModel', userSchema);
-
