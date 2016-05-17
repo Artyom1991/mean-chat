@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!--styles-->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+    <!--scripts-->
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <!---->
+    <script src="js/chat/index-chat-page.js"></script>
+    <script src="js/nav-bar.js"></script>
+
+    <title>Sign in</title>
+</head>
+<body>
+<header>
+    <!--navigation bar-->
+    <div id="navBarContainer"></div>
+</header>
+<section class="container">
+    <article class="col-sm-4"></article>
+    <article class="col-sm-4">
+    <!--sign In form-->
+    <form class="form-signin" role="form">
+        <input type="email" ng-model="login" class="form-control" placeholder="Login" required="" autofocus="">
+        <input type="password" ng-model="password" class="form-control" placeholder="Password" required="">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" value="remember-me"> Remember me
+            </label>
+        </div>
+        <button type="button" ng-click="loginClick()" class="btn btn-lg btn-primary btn-block">Sign in</button>
+    </form>
+    </article>
+    <article class="col-sm-4"></article>
+
+</section>
+
+</body>
+<script>
+    //render nav-bar
+    NavigationBar.renderIn("navBarContainer");
+</script>
+</html>

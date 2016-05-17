@@ -1,47 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title></title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
     <!--styles-->
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="css/chat-fullpage.css">
     <!--scripts-->
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <!---->
+    <script src="js/chat/index-chat-page.js"></script>
     <script src="js/nav-bar.js"></script>
-    <script src="js/admin/admin-page.js"></script>
 
+    <title>MEAN chat</title>
 </head>
-<body ng-app="AdminPageApp">
-<div class="container">
-    <header>
-        <!--navigation bar-->
-        <div id="navBarContainer"></div>
-    </header>
-    <article class="row">
-        <section class="col-sm-3">
-            <!--admin control panel-->
-            <ul class="nav">
-                <li><a href="">Users</a></li>
-                <li><a href="" onclick="">Users API tests</a></li>
-            </ul>
+
+<body ng-app="IndexChatPageApp">
+<header>
+    <!--navigation bar-->
+    <div id="navBarContainer"></div>
+</header>
+<!-- Page Content -->
+<section class="container">
+    <article class="row flex-row">
+        <!--chat window-->
+        <section class="col-xs-9">
+            <div class="panel panel-default flex-col">
+                <div class="panel-heading">Messages</div>
+                <div class="panel-body flex-grow">
+                    <ul>
+                        <li>1</li>
+                        <li>2</li>
+                    </ul>
+                </div>
+                <div class="panel-footer">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Type your message here">
+                            <span class="input-group-btn">
+                            <button class="btn btn-secondary" type="button">Send!</button>
+                            </span>
+                    </div>
+                </div>
+            </div>
         </section>
 
-        <section class="col-sm-9">
-            <!--AngularJS SPA CRUD table-->
-            <table class="table table-striped" ng-controller="usersTableCtrl">
-                <tr ng-repeat="user in users">
-                    <td>{{ user._id }}</td>
-                    <td>{{ user.login }}</td>
-                    <td>{{ user.email }}</td>
-                </tr>
-            </table>
+        <!--online users list-->
+        <section class="col-xs-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">Members</div>
+                <div class="panel-body">
+                    <ul>
+                        <li>user 1</li>
+                        <li>user 2</li>
+                    </ul>
+                </div>
+            </div>
+
         </section>
     </article>
-</div>
+</section>
+<!-- /.container -->
+
 </body>
 <script>
     //render nav-bar

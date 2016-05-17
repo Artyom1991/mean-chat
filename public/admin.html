@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+    <!--styles-->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+    <!--scripts-->
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <!---->
+    <script src="js/nav-bar.js"></script>
+    <script src="js/admin/admin-page.js"></script>
+
+</head>
+<body ng-app="AdminPageApp">
+<header>
+    <!--navigation bar-->
+    <div id="navBarContainer"></div>
+</header>
+<div class="container">
+    <article class="row">
+        <section class="col-sm-3">
+            <!--admin control panel-->
+            <ul class="nav">
+                <li><a href="">Users</a></li>
+                <li><a href="" onclick="">Users API tests</a></li>
+            </ul>
+        </section>
+
+        <section class="col-sm-9">
+            <!--AngularJS SPA CRUD table-->
+            <table class="table table-striped" ng-controller="usersTableCtrl">
+                <tr ng-repeat="user in users">
+                    <td>{{ user._id }}</td>
+                    <td>{{ user.login }}</td>
+                    <td>{{ user.email }}</td>
+                </tr>
+            </table>
+        </section>
+    </article>
+</div>
+</body>
+<script>
+    //render nav-bar
+    NavigationBar.renderIn("navBarContainer");
+</script>
+</html>

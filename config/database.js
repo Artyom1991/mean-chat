@@ -27,3 +27,6 @@ var mlab = (function () {
 
 module.exports = mongoose;
 module.exports = mlab;
+module.exports = {
+    'secret': 'secretPhrase'
+};
