@@ -13,3 +13,8 @@ Test user access:
 
     login: user
     pass: user
+
+To install packages:
+
+    npm install
+    bower install
