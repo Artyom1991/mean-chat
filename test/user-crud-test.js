@@ -3,7 +3,7 @@
  */
 var assert = require('chai').assert;
 
-var userSchema = require('../models/user-schema');
+var userSchema = require('../models/user-model');
 var mongoose = require('mongoose');
 
 var mlab = require('../config/database.js');

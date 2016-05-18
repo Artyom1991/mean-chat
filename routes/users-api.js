@@ -5,7 +5,7 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var router = express.Router();
-var userSchema = require('../models/user-schema');
+var userSchema = require('../models/user-model');
 
 /**
  * GET all users from DB

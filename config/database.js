@@ -18,7 +18,7 @@ var mlab = (function () {
 
     var conn = mongoose.connection;
 
-    conn.on('error', console.error.bind(console, 'connection error:'));
+    conn.on('error', console.error.bind(console, 'DB connection error'));
 
     conn.once('open', function () {
         console.log("Database connection established");

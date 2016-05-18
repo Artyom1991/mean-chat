@@ -14,12 +14,11 @@
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <!---->
-    <script src="js/chat/index-chat-page.js"></script>
     <script src="js/nav-bar.js"></script>
 
     <title>Sign in</title>
 </head>
-<body>
+<body ng-app="SignIn">
 <header>
     <!--navigation bar-->
     <div id="navBarContainer"></div>
@@ -28,9 +27,9 @@
     <article class="col-sm-4"></article>
     <article class="col-sm-4">
     <!--sign In form-->
-    <form class="form-signin" role="form">
-        <input type="email" ng-model="login" class="form-control" placeholder="Login" required="" autofocus="">
-        <input type="password" ng-model="password" class="form-control" placeholder="Password" required="">
+    <form class="form-signin" ng-submit="vm.login()" role="form" novalidate>
+        <input type="text" ng-model="vm.login" class="form-control" placeholder="Login" required autofocus="">
+        <input type="password" ng-model="vm.password" class="form-control" placeholder="Password" required>
         <div class="checkbox">
             <label>
                 <input type="checkbox" value="remember-me"> Remember me
