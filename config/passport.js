@@ -1,3 +1,9 @@
+/**
+ * JWT strategy for PassportJS.
+ *
+ * Adds the JwtStrategy to our passport,
+ * just defines how PassportJS tries to find a user with a given jwt_payload.id.
+ */
 var JwtStrategy = require('passport-jwt').Strategy;
 var ExtractJwt = require('passport-jwt').ExtractJwt;
 

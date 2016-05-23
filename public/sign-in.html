@@ -8,35 +8,40 @@
     <meta name="author" content="">
 
     <!--styles-->
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="bower_components/bootswatch-dist/css/bootstrap.css">
     <!--scripts-->
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <!---->
     <script src="js/nav-bar.js"></script>
+    <script src="js/auth/base64-decode.js"></script>
+    <script src="js/auth/sign-in.js"></script>
 
     <title>Sign in</title>
 </head>
-<body ng-app="SignIn">
+<body ng-app="SignInApp">
 <header>
     <!--navigation bar-->
     <div id="navBarContainer"></div>
 </header>
-<section class="container">
+<section class="container" ng-controller="UserCtrl">
     <article class="col-sm-4"></article>
     <article class="col-sm-4">
-    <!--sign In form-->
-    <form class="form-signin" ng-submit="vm.login()" role="form" novalidate>
-        <input type="text" ng-model="vm.login" class="form-control" placeholder="Login" required autofocus="">
-        <input type="password" ng-model="vm.password" class="form-control" placeholder="Password" required>
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" value="remember-me"> Remember me
-            </label>
-        </div>
-        <button type="button" ng-click="loginClick()" class="btn btn-lg btn-primary btn-block">Sign in</button>
-    </form>
+        <!--sign In form-->
+        <span ng-show="isAuthenticated">{{welcome}}</span>
+
+        <form ng-show="!isAuthenticated" ng-submit="submit()">
+            <input ng-model="user.login" type="text" name="user" class="form-control" placeholder="Login" required/>
+            <input ng-model="user.password" type="password" name="pass" class="form-control" placeholder="Password" required/>
+            <button type="button" ng-click="signIn()" class="btn btn-lg btn-primary btn-block">Sign in</button>
+        </form>
+        <div>{{error}}</div>
+        <!--div ng-show="isAuthenticated">
+            <br>
+            <div>{{message}}</div>
+            <a ng-click="logout()" href="">Logout</a>
+        </div-->
     </article>
     <article class="col-sm-4"></article>
 

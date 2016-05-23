@@ -11,7 +11,7 @@ To install packages:
 
     $ git clone https://github.com/Artyom1991/mean-chat
     $ cd mean-chat
-    $ npm install && bower install && grunt
+    $ npm install && bower install
 
     # Open browser on http://localhost:3000
 

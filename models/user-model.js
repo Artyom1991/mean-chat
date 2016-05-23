@@ -1,12 +1,20 @@
+/**
+ * User model.
+ *
+ * User mongoose schema,
+ * bcrypt middleware on UserSchema,
+ * User password verification function.
+ */
+
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+var MongooseSchema = mongoose.Schema;
 var bcrypt = require('bcrypt');
 var SALT_WORK_FACTOR = 10;
 
 /**
  * User schema
  */
-var UserSchema = new Schema({
+var UserSchema = new MongooseSchema({
     login: {
         type: String,
         unique: true,
@@ -24,6 +32,8 @@ var UserSchema = new Schema({
 });
 
 /**
+ * Bcrypt middleware on UserSchema.
+ *
  * Performing before saving User to DB,
  * automatically hash the password before it’s saved to the database.
  */
@@ -39,7 +49,7 @@ UserSchema.pre('save', function (next) {
             bcrypt.hash(user.password, salt, function (err, hash) {
                 if (err) return next(err);
 
-                // override the cleartext password with the hashed one
+                // override the plain text password with the hashed one
                 user.password = hash;
                 next();
             });
@@ -50,6 +60,8 @@ UserSchema.pre('save', function (next) {
 });
 
 /**
+ * Password verification.
+ *
  * Set compare password function
  * @param candidatePassword
  * @param cb
