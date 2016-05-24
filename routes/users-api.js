@@ -68,13 +68,14 @@ router.post('/', function (req, res) {
 
         /** trying to save new user*/
         newUser.save(function (err) {
-            console.log('Trying to save user %s', JSON.stringify(newUser));
+            console.log('Trying to save user %j', newUser);
             if (err) {
                 console.log("Maybe User already exists in DB, err: %s", err);
                 res.statusCode =  HttpStatus.CONFLICT;
                 res.send(util.format('User with login %s already exists in DB', newUser.login));
             }
             res.statusCode =  HttpStatus.OK;
+            res.end;
         });
     }
 });
@@ -90,7 +91,7 @@ router.put('/:user_login', function (req, res) {
             res.send(util.format("There was a problem updating in DB user:\r\n%s\r\n%s", req.params, err));
         } else {
             //User has been created
-            console.log("User has been edited: %s", JSON.stringify(req.body));
+            console.log("User has been edited: %j", req.body);
             res.statusCode = HttpStatus.OK;
             res.end();
         }

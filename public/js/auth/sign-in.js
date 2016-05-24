@@ -1,4 +1,3 @@
-//TODO understand what it is
 var myApp = angular.module('SignInApp', []);
 
 myApp.controller('UserCtrl', function ($scope, $http, $window) {

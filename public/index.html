@@ -17,8 +17,7 @@
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <script src="bower_components/socket.io.client/dist/socket.io-1.3.5.js"></script>
     <!---->
-    <script src="js/auth/base64-decode.js"></script>
-
+    <script src="js/auth/token-processor.js"></script>
     <script src="js/nav-bar.js"></script>
 
     <title>MEAN chat</title>
@@ -37,13 +36,14 @@
             <div class="panel panel-default flex-col">
                 <div class="panel-heading">Messages</div>
                 <div class="panel-body flex-grow">
-                    <ul id="chatMessagesList">
-                        <li>Welcome to our chat!</li>
+                    <ul class="list-group" id="chatMessagesList">
+                        <li class="list-group-item">Welcome to our chat!</li>
                     </ul>
                 </div>
                 <div class="panel-footer">
                     <div class="input-group">
-                        <input id="chatMessageInput" type="text" class="form-control" placeholder="Type your message here">
+                        <input id="chatMessageInput" type="text" class="form-control"
+                               placeholder="Type your message here">
                             <span class="input-group-btn">
                             <button id="chatSendMessageButton" class="btn btn-default" type="button">Send!</button>
                             </span>
@@ -77,13 +77,21 @@
     //socket test
 
     var socket = io();
-    $('#chatSendMessageButton').click(function(){
+    //send message to server, add this message to list if server received it
+    $('#chatSendMessageButton').click(function (serverResponseData) {
         socket.emit('chat message', $('#chatMessageInput').val());
         $('#chatMessageInput').val('');
+        console.log(serverResponseData);
         return false;
     });
-    socket.on('chat message', function(msg){
-        $('#chatMessagesList').append($('<li>').text(msg));
+
+    //add message to page
+    socket.on('chat message', function (msg) {
+        $('#chatMessagesList').append(
+                $('<li>', {class: "list-group-item"}).append(
+                        $('<p>').append($('<strong>').text(getUserProfile().login + ": "), msg)
+                )
+        );
     });
 </script>
 </html>

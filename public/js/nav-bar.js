@@ -11,11 +11,11 @@ class NavigationBar {
      */
     static renderIn(containerId) {
         const CHAT_URL = "index.html",
-            SIGN_UP_URL = "register.html",
+            SIGN_UP_URL = "sign-up.html",
             SIGN_IN_URL = "sign-in.html",
             ADMIN_URL = "admin.html";
 
-        var userProfile = getProfile();
+        var userProfile = getUserProfile();
         var nav = $('<nav>', {class: "navbar navbar-default"}).append(
             $('<div>', {class: "container-fluid"}).append(
                 $('<div>', {class: "navbar-header"}).append(
@@ -26,7 +26,7 @@ class NavigationBar {
                 ),
                 $('<ul>', {class: "nav navbar-nav navbar-right"}).append(
                     userProfile ?
-                        $('<li>').append($('<a>', {}).text("Logout, " + getProfile().login).click(logout))
+                        $('<li>').append($('<a>', {}).text("Logout, " + getUserProfile().login).click(logout))
                         :
                         [$('<li>').append($('<a>', {href: SIGN_UP_URL}).text("Sign up")),
                             $('<li>').append($('<a>', {href: SIGN_IN_URL}).text("Sign in"))]
@@ -36,23 +36,6 @@ class NavigationBar {
 
         $('#' + containerId).append(nav);
     }
-}
-
-/**
- * Get authorized user profile from storage
- *
- * @returns user profile or null
- */
-function getProfile() {
-    var LOGIN_INDEX_IN_JWT_TOKEN = 1;
-    var tokenJWT = sessionStorage.getItem('token');
-    //if no token in session storage return null
-    if (!tokenJWT)
-        return null;
-
-    var encodedProfile = sessionStorage.getItem('token').split('.')[LOGIN_INDEX_IN_JWT_TOKEN];
-    //user profile
-    return (JSON.parse(url_base64_decode(encodedProfile)));
 }
 
 /**
