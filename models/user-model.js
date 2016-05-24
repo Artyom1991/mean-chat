@@ -11,9 +11,7 @@ var MongooseSchema = mongoose.Schema;
 var bcrypt = require('bcrypt');
 var SALT_WORK_FACTOR = 10;
 
-/**
- * User schema
- */
+/** User schema */
 var UserSchema = new MongooseSchema({
     login: {
         type: String,
@@ -59,7 +57,7 @@ UserSchema.pre('save', function (next) {
     }
 });
 
-/**
+/** 
  * Password verification.
  *
  * Set compare password function

@@ -1,4 +1,6 @@
-// bundle our routes
+/**
+ * 
+ */
 var express = require('express');
 var mongoose = require('mongoose');
 var router = express.Router();
@@ -7,7 +9,9 @@ var jwt         = require('jwt-simple');
 var databaseConfig = require('../config/database'); // get db config file
 var passport	= require('passport');
 
-// route to authenticate a user (POST http://localhost:8080/api/authenticate)
+/**
+ * Route to authenticate a user
+ */
 router.post('/sign-in', function(req, res) {
     mongoose.model('UserModel').findOne({
         login: req.body.login
@@ -55,6 +59,12 @@ router.get('/member-info', passport.authenticate('jwt', { session: false}), func
     }
 });
 
+/**
+ * Get token from request headers
+ *
+ * @param requestHeaders request headers
+ * @returns token string or null if not exists
+ */
 var getToken = function (requestHeaders) {
     if (requestHeaders && requestHeaders.authorization) {
         var parted = requestHeaders.authorization.split(' ');

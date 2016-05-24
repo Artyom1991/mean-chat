@@ -81,12 +81,12 @@
     $('#chatSendMessageButton').click(function (serverResponseData) {
         socket.emit('chat message', $('#chatMessageInput').val());
         $('#chatMessageInput').val('');
-        console.log(serverResponseData);
+        //console.log(serverResponseData);
         return false;
     });
 
     //add message to page
-    socket.on('chat message', function (msg) {
+    socket.on('chat message created', function (msg) {
         $('#chatMessagesList').append(
                 $('<li>', {class: "list-group-item"}).append(
                         $('<p>').append($('<strong>').text(getUserProfile().login + ": "), msg)

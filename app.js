@@ -7,9 +7,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var auth = require('./routes/auth-api');
-var users = require('./routes/users-api');
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -22,10 +19,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 /** user api  routing*/
-app.use('/api/users', users);
+app.use('/api/users', require('./routes/users-api'));
 
 /** auth routing*/
-app.use('/auth-api', auth);
+app.use('/auth-api', require('./routes/auth-api'));
+
+/** messages routing*/
+app.use('/messages-api', require('./routes/messages-api'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

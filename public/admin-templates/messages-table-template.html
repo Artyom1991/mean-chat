@@ -1,0 +1,12 @@
+<table class="table table-striped" ng-controller="MessagesCtrl">
+    <tr>
+        <th>Login</th>
+        <th>Created</th>
+        <th>Message</th>
+    </tr>
+    <tr ng-repeat="message in messages">
+        <td>{{ message.userLogin }}</td>
+        <td>{{ message.created }}</td>
+        <td>{{ message.message }}</td>
+    </tr>
+</table>

@@ -1,0 +1,13 @@
+<!--AngularJS SPA CRUD table-->
+<table class="table table-striped" ng-controller="UsersCtrl">
+    <tr>
+        <th>ID</th>
+        <th>Login</th>
+        <th>E-mail</th>
+    </tr>
+    <tr ng-repeat="user in users">
+        <td>{{ user._id }}</td>
+        <td>{{ user.login }}</td>
+        <td>{{ user.email }}</td>
+    </tr>
+</table>

@@ -7,8 +7,9 @@
     <!--styles-->
     <link rel="stylesheet" href="bower_components/bootswatch-dist/css/bootstrap.css">
     <!--scripts-->
-    <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <!---->
     <script src="js/auth/token-processor.js"></script>
@@ -26,20 +27,15 @@
         <section class="col-sm-3">
             <!--admin control panel-->
             <ul class="nav">
-                <li><a href="">Users</a></li>
-                <li><a href="" onclick="">Users API tests</a></li>
+                <li><a href="#">Users</a></li>
+                <li><a href="#showUserApiTest">Users API tests</a></li>
+                <li><a href="#showMessages">Messages</a></li>
             </ul>
         </section>
 
         <section class="col-sm-9">
-            <!--AngularJS SPA CRUD table-->
-            <table class="table table-striped" ng-controller="usersTableCtrl">
-                <tr ng-repeat="user in users">
-                    <td>{{ user._id }}</td>
-                    <td>{{ user.login }}</td>
-                    <td>{{ user.email }}</td>
-                </tr>
-            </table>
+            <div ng-view></div>
+
         </section>
     </article>
 </div>
