@@ -15,7 +15,7 @@ class NavigationBar {
             SIGN_IN_URL = "sign-in.html",
             ADMIN_URL = "admin.html";
 
-        var userProfile = getUserProfile();
+        var userProfile = TokenHandler.getUserProfile();
         var nav = $('<nav>', {class: "navbar navbar-default"}).append(
             $('<div>', {class: "container-fluid"}).append(
                 $('<div>', {class: "navbar-header"}).append(
@@ -26,7 +26,7 @@ class NavigationBar {
                 ),
                 $('<ul>', {class: "nav navbar-nav navbar-right"}).append(
                     userProfile ?
-                        $('<li>').append($('<a>', {}).text("Logout, " + getUserProfile().login).click(logout))
+                        $('<li>').append($('<a>', {}).text("Logout, " + TokenHandler.getUserProfile().login).click(logout))
                         :
                         [$('<li>').append($('<a>', {href: SIGN_UP_URL}).text("Sign up")),
                             $('<li>').append($('<a>', {href: SIGN_IN_URL}).text("Sign in"))]

@@ -1,6 +1,6 @@
 var myApp = angular.module('SignInApp', []);
 
-myApp.controller('UserCtrl', function ($scope, $http, $window) {
+myApp.controller('UserSignInCtrl', function ($scope, $http, $window) {
     $scope.user = {
         login: '',
         password: ''
@@ -10,33 +10,31 @@ myApp.controller('UserCtrl', function ($scope, $http, $window) {
     $scope.welcome = '';
     $scope.message = '';
 
+    /**
+     * Sign in
+     *
+     * @success save received token to session storage
+     * @error delete token from session storage
+     */
     $scope.signIn = function () {
         $http
             .post('/auth-api/sign-in', $scope.user)
             .success(function (data, status, headers, config) {
-                $window.sessionStorage.token = data.token;
-                $scope.isAuthenticated = true;
-                var encodedProfile = data.token.split('.')[1];
-                var profile = JSON.parse(url_base64_decode(encodedProfile));
-                $scope.welcome = 'Welcome, ' + profile.login;
+                /** save received token */
+                TokenHandler.saveToken(data.token);
+
+                //redirect to index
+                window.location.href = '/index.html';
             })
             .error(function (data, status, headers, config) {
-                // Erase the token if the user fails to log in
+                /** erase the token if the user fails to log in*/
                 delete $window.sessionStorage.token;
-                $scope.isAuthenticated = false;
 
                 // Handle login errors here
                 $scope.error = 'Error: Invalid login or password';
                 $scope.welcome = '';
             });
     };
-
-    /*$scope.logout = function () {
-        $scope.welcome = '';
-        $scope.message = '';
-        $scope.isAuthenticated = false;
-        delete $window.sessionStorage.token;
-    };*/
 });
 
 myApp.factory('authInterceptor', function ($rootScope, $q, $window) {

@@ -17,7 +17,7 @@ router.post('/sign-in', function(req, res) {
         login: req.body.login
     }, function(err, user) {
         if (err) throw err;
-
+        /** user not found in db*/
         if (!user) {
             res.send({success: false, msg: 'Authentication failed. User not found.'});
         } else {

@@ -17,7 +17,7 @@
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <script src="bower_components/socket.io.client/dist/socket.io-1.3.5.js"></script>
     <!---->
-    <script src="js/auth/token-processor.js"></script>
+    <script src="js/auth/token-handler.js"></script>
     <script src="js/nav-bar.js"></script>
 
     <title>MEAN chat</title>
@@ -74,22 +74,39 @@
     //render nav-bar
     NavigationBar.renderIn("navBarContainer");
 
-    //socket test
-
+    /** connect to server socket*/
     var socket = io();
-    //send message to server, add this message to list if server received it
-    $('#chatSendMessageButton').click(function (serverResponseData) {
-        socket.emit('chat message', $('#chatMessageInput').val());
-        $('#chatMessageInput').val('');
+
+    /** get actual token from session storage*/
+    var token = TokenHandler.getToken();
+
+    /** subscribe on "connect" event*/
+    socket.on('connect', function(){
+        //try to authenticate
+        socket.emit('authentication',token);
+
+        /** if server unauthorized event*/
+        socket.on('unauthorized',function(msg){
+            console.log("socket.io unauthorized event: %s", msg);
+            //TODO handle unauthorized user event
+        });
+    });
+
+    //FIXME rebase this into connection event
+    /** send message to server, add this message to list if server received it*/
+    var sendMessageButton = $('#chatSendMessageButton');
+    sendMessageButton.click(function (serverResponseData) {
+        socket.emit('chat message', sendMessageButton.val());
+        sendMessageButton.val('');
         //console.log(serverResponseData);
         return false;
     });
 
-    //add message to page
+    /** add message to page*/
     socket.on('chat message created', function (msg) {
         $('#chatMessagesList').append(
                 $('<li>', {class: "list-group-item"}).append(
-                        $('<p>').append($('<strong>').text(getUserProfile().login + ": "), msg)
+                        $('<p>').append($('<strong>').text(TokenHandler.getUserProfile().login + ": "), msg)
                 )
         );
     });

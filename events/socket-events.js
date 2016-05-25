@@ -1,7 +1,7 @@
 /**
  * Socket.io events handler
  *
- * @param io
+ * @param io socket.io
  */
 var util = require('util');
 var ChatMessage = require('../models/chat-message-model');
@@ -9,16 +9,23 @@ var ChatMessage = require('../models/chat-message-model');
 module.exports = function (io) {
     /** subscribe on events from client*/
     io.on('connection', function (client) {
-        //user connected event
-        console.log('a user connected');
-        client.broadcast.emit('user connected');
+        /** user successfully connected event*/
+        client.on('connect', function () {
+            console.log('a user connected');
+            client.broadcast.emit('user connected');
+        });
 
-        //user disconnected event
+        /** user authorization event*/
+        client.on('authentication', function (token) {
+            console.log("user token: %s", token);
+        });
+
+        /** user disconnected event*/
         client.on('disconnect', function () {
             console.log('user disconnected');
         });
 
-        //incoming message from user
+        /** user incoming message event*/
         client.on('chat message', function (messagePlainText) {
             try {
                 /** create message obj from incoming message text*/
