@@ -28,6 +28,8 @@ module.exports = function (io) {
         /** user incoming message event*/
         client.on('chat message', function (messagePlainText) {
             try {
+                console.log("incoming message: %s", messagePlainText);
+
                 /** create message obj from incoming message text*/
                 var newMsg = new ChatMessage({
                     userLogin: "mock-stub",
@@ -42,6 +44,7 @@ module.exports = function (io) {
                     else {
                         /** send message to those connected*/
                         io.emit('chat message created', messagePlainText);
+
                     }
                 });
             } catch (e) {

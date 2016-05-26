@@ -81,34 +81,34 @@
     var token = TokenHandler.getToken();
 
     /** subscribe on "connect" event*/
-    socket.on('connect', function(){
+    socket.on('connect', function () {
         //try to authenticate
-        socket.emit('authentication',token);
+        socket.emit('authentication', token);
 
         /** if server unauthorized event*/
-        socket.on('unauthorized',function(msg){
+        socket.on('unauthorized', function (msg) {
             console.log("socket.io unauthorized event: %s", msg);
             //TODO handle unauthorized user event
         });
+
+        /** while new message from server event, add message to page*/
+        socket.on('chat message created', function (msg) {
+            $('#chatMessagesList').append(
+                    $('<li>', {class: "list-group-item"}).append(
+                            $('<p>').append($('<strong>').text(TokenHandler.getUserProfile().login + ": "), msg)
+                    )
+            );
+        });
     });
 
-    //FIXME rebase this into connection event
-    /** send message to server, add this message to list if server received it*/
-    var sendMessageButton = $('#chatSendMessageButton');
-    sendMessageButton.click(function (serverResponseData) {
-        socket.emit('chat message', sendMessageButton.val());
-        sendMessageButton.val('');
-        //console.log(serverResponseData);
+    var chatMessageInput = $('#chatMessageInput');
+
+    /** send message from input to server*/
+    $('#chatSendMessageButton').click(function () {
+        socket.emit('chat message', chatMessageInput.val());
+        chatMessageInput.val('');
         return false;
     });
 
-    /** add message to page*/
-    socket.on('chat message created', function (msg) {
-        $('#chatMessagesList').append(
-                $('<li>', {class: "list-group-item"}).append(
-                        $('<p>').append($('<strong>').text(TokenHandler.getUserProfile().login + ": "), msg)
-                )
-        );
-    });
 </script>
 </html>
