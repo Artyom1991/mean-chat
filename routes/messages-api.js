@@ -1,20 +1,12 @@
 var express = require('express');
-var mongoose = require('mongoose');
-var ChatMessage = require('../models/chat-message-model');
+var chatCacheInstance = require('../events/chat-cache');
 var router = express.Router();
 
 /**
  * GET all messages from DB
  */
 router.get('/', function (req, res, next) {
-    mongoose.model('ChatMessage').find({}, function (err, messages) {
-        if (err) {
-            return console.error(err)
-        }
-        else {
-            res.json(messages);
-        }
-    })
+    res.json(chatCacheInstance.messages)
 });
 
 module.exports = router;

@@ -37,45 +37,4 @@ router.post('/sign-in', function(req, res) {
     });
 });
 
-// route to a restricted info (GET http://localhost:8080/api/memberinfo)
-router.get('/member-info', passport.authenticate('jwt', { session: false}), function(req, res) {
-    var token = getToken(req.headers);
-    if (token) {
-        var decoded = jwt.decode(token, databaseConfig.secret);
-
-        mongoose.model('UserModel').findOne({
-            login: decoded.login
-        }, function(err, user) {
-            if (err) throw err;
-
-            if (!user) {
-                return res.status(403).send({success: false, msg: 'Authentication failed. User not found.'});
-            } else {
-                res.json({success: true, msg: 'Welcome in the member area ' + user.login + '!'});
-            }
-        });
-    } else {
-        return res.status(403).send({success: false, msg: 'No token provided.'});
-    }
-});
-
-/**
- * Get token from request headers
- *
- * @param requestHeaders request headers
- * @returns token string or null if not exists
- */
-var getToken = function (requestHeaders) {
-    if (requestHeaders && requestHeaders.authorization) {
-        var parted = requestHeaders.authorization.split(' ');
-        if (parted.length === 2) {
-            return parted[1];
-        } else {
-            return null;
-        }
-    } else {
-        return null;
-    }
-};
-
 module.exports = router;

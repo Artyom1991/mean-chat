@@ -10,15 +10,15 @@
     <!--styles-->
     <!--link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"-->
     <link rel="stylesheet" href="bower_components/bootswatch-dist/css/bootstrap.css">
-    <link rel="stylesheet" href="css/chat-fullpage.css">
     <!--scripts-->
     <!--script src="bower_components/angular/angular.js"></script-->
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <script src="bower_components/socket.io.client/dist/socket.io-1.3.5.js"></script>
     <!---->
-    <script src="js/auth/token-handler.js"></script>
     <script src="js/nav-bar.js"></script>
+    <script src="js/auth/token-handler.js"></script>
+
 
     <title>MEAN chat</title>
 </head>
@@ -63,52 +63,13 @@
                     </ul>
                 </div>
             </div>
-
         </section>
     </article>
 </section>
-<!-- /.container -->
-
 </body>
+<script src="js/socket/socket-events.js"></script>
 <script>
     //render nav-bar
     NavigationBar.renderIn("navBarContainer");
-
-    /** connect to server socket*/
-    var socket = io();
-
-    /** get actual token from session storage*/
-    var token = TokenHandler.getToken();
-
-    /** subscribe on "connect" event*/
-    socket.on('connect', function () {
-        //try to authenticate
-        socket.emit('authentication', token);
-
-        /** if server unauthorized event*/
-        socket.on('unauthorized', function (msg) {
-            console.log("socket.io unauthorized event: %s", msg);
-            //TODO handle unauthorized user event
-        });
-
-        /** while new message from server event, add message to page*/
-        socket.on('chat message created', function (msg) {
-            $('#chatMessagesList').append(
-                    $('<li>', {class: "list-group-item"}).append(
-                            $('<p>').append($('<strong>').text(TokenHandler.getUserProfile().login + ": "), msg)
-                    )
-            );
-        });
-    });
-
-    var chatMessageInput = $('#chatMessageInput');
-
-    /** send message from input to server*/
-    $('#chatSendMessageButton').click(function () {
-        socket.emit('chat message', chatMessageInput.val());
-        chatMessageInput.val('');
-        return false;
-    });
-
 </script>
 </html>
