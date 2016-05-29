@@ -25,7 +25,7 @@ socket.on('connect', function () {
         });
 
         /** subscribe on members list change event */
-        socket.on('members list change', function(membersList){
+        socket.on('members list change', function (membersList) {
             //TODO this
         });
 
@@ -51,9 +51,20 @@ $('#chatSendMessageButton').click(function () {
     return false;
 });
 
-function liFromChatMessage(chatMessageObj){
-    return $('<li>', {class: "list-group-item"}).append(
-        $('<p>').text("<strong>" + (chatMessageObj.created) +
-            chatMessageObj.userLogin + ": " + "</strong>" + chatMessageObj.message)
-    )
+/**
+ * Create list item from message object.
+ *
+ * @param chatMessageObj chat message object
+ * @returns {*|jQuery} list item
+ */
+function liFromChatMessage(chatMessageObj) {
+    //convert ISO date to user Locale
+    var date = (new Date(chatMessageObj.created)).toLocaleString();
+
+    //return list item
+    return $('<li>', {class: "list-group-item"})
+        .append($('<p>')
+            .append(date + " ")
+            .append($('<strong>').text(chatMessageObj.userLogin + ": "))
+            .append(chatMessageObj.message))
 }
