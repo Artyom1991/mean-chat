@@ -8,6 +8,7 @@ Simple nodejs chat on MEAN stack.
 Uses Node.js, MongoDB (mongoose) on mLab, Express, Angular. For deploying on Heroku on future.
 
 Require: node since 5.0 (V8 5.0 for ES6 support)
+[NodeSource Node.js Binary Distributions](https://github.com/nodesource/distributions#debinstall)
 
 To install packages:
 
