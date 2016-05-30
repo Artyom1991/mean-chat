@@ -7,40 +7,36 @@ var util = require('util');
 var ChatMessage = require('../models/chat-message');
 var chatCacheInstance = require('../events/chat-cache');
 
-var jwt = require('jwt-simple');
-var mongoose = require('mongoose');
-var databaseConfig = require('../config/database'); // get db config file
-var passport = require('passport');
+var authCheck = require('../auth/auth-check');
 
 /**
- * Check that user JWT token is valid.
+ * Subscribe on authorized user events.
  *
- * Token is string: "JWT 'SHA256 encoded user obj' ".
- * @param jwtToken
- * @param unAuthorizedCallback - callback if user unauthorized
- * @param authorizedCallback(user) - callback if user authorized
+ * @param socketClient - socket io client connection
+ * @param io - socket.io
+ * @param dbUser - user fetched from database
  */
-var checkAuthToken = function (jwtToken, unAuthorizedCallback, authorizedCallback) {
-    if (!jwtToken) return unAuthorizedCallback();
-        
-    var encodedToken = jwtToken.split(' ')[1];
-    var tokenUser = jwt.decode(encodedToken, databaseConfig.secret);
+function subscribeOnAuthorizedUserEvents(socketClient, io, dbUser) {
+    /** respond to user with greeting message*/
+    io.to(socketClient.id).emit('successfully authenticated', "Successfully authenticated!");
 
-    /** fetch user from DB by login from jwtToken*/
-    mongoose.model('UserModel').findOne({
-        login: tokenUser.login
-    }, function (err, dbUser) {
-        if (err) throw err;
+    /** respond all previous messages from chat cache*/
+    io.to(socketClient.id).emit('all previous messages cache', chatCacheInstance.messages);
 
-        /** if user exists in DB*/
-        if (dbUser){
-            /** if password from token matches password from DB, authorize user*/
-            tokenUser.password === dbUser.password ? authorizedCallback(dbUser) : unAuthorizedCallback();
-        } else {
-            unAuthorizedCallback();
-        }
+    /** subscribe on user incoming message event*/
+    socketClient.on('chat message', function (messagePlainText) {
+        console.log("incoming message from %s by socket id %s : %s",dbUser.login, socketClient.id, messagePlainText);
+
+        /** create message obj from incoming message text*/
+        var receivedMsg = new ChatMessage(messagePlainText, dbUser.login);
+
+        /** store message in cache*/
+        chatCacheInstance.pushMessage(receivedMsg);
+
+        /** send message to all connected users*/
+        io.emit('chat message created', receivedMsg);
     });
-};
+}
 
 module.exports = function (io) {
     /** subscribe on events from client*/
@@ -60,35 +56,20 @@ module.exports = function (io) {
              * Check user token for valid user and password,
              * pass cb function for success and not success (unauthorized)
              */
-            checkAuthToken(token,
+            authCheck.checkAuthToken(token,
                 /** invalid token*/
                 function () {
                     /** if user can't be authorized (wrong token), respond to user*/
-                    io.to(client.id).emit('authorization failed', "");
+                    io.to(client).emit('authorization failed', "");
                 },
 
                 /** valid token*/
-                function (user) {
-                    /** respond to user with greeting message*/
-                    io.to(client.id).emit('successfully authenticated', "Successfully authenticated!");
-
-                    /** respond all previous messages from chat cache*/
-                    io.to(client.id).emit('all previous messages cache', chatCacheInstance.messages);
-
-                    /** subscribe on user incoming message event*/
-                    client.on('chat message', function (messagePlainText) {
-                        console.log("incoming message: %s", messagePlainText);
-
-                        /** create message obj from incoming message text*/
-                        var receivedMsg = new ChatMessage(messagePlainText, user.login);
-
-                        /** store message in cache*/
-                        chatCacheInstance.pushMessage(receivedMsg);
-
-                        /** send message to all connected users*/
-                        io.emit('chat message created', receivedMsg);
-                    });
-                })
+                function (dbUser) {
+                    console.log("user %j authorized", dbUser);
+                    //subscribe on events
+                    subscribeOnAuthorizedUserEvents(client, io, dbUser);
+                }
+            );
         });
 
         /** subscribe on user disconnect event*/
