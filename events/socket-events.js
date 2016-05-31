@@ -6,6 +6,7 @@
 var util = require('util');
 var ChatMessage = require('../models/chat-message');
 var chatCacheInstance = require('../events/chat-cache');
+var chatMembersListInstance = require('../events/chat-members-list');
 
 var authCheck = require('../auth/auth-check');
 
@@ -35,6 +36,17 @@ function subscribeOnAuthorizedUserEvents(socketClient, io, dbUser) {
 
         /** send message to all connected users*/
         io.emit('chat message created', receivedMsg);
+    });
+
+    /** subscribe on user disconnect event*/
+    socketClient.on('disconnect', function () {
+        console.log('user %s disconnected', dbUser.login);
+
+        //remove from chat members list
+        chatMembersListInstance.removeMemberByLogin(dbUser.login);
+        
+        //notify all that user left chat
+        io.emit('chat members list change', chatMembersListInstance.getMembersLogins());
     });
 }
 
@@ -68,13 +80,14 @@ module.exports = function (io) {
                     console.log("user %j authorized", dbUser);
                     //subscribe on events
                     subscribeOnAuthorizedUserEvents(client, io, dbUser);
+
+                    //add new user to chat members list
+                    chatMembersListInstance.pushMember(dbUser);
+
+                    //notify all that new user connected
+                    io.emit('chat members list change', chatMembersListInstance.getMembersLogins());
                 }
             );
-        });
-
-        /** subscribe on user disconnect event*/
-        client.on('disconnect', function () {
-            console.log('user disconnected');
         });
     })
 };

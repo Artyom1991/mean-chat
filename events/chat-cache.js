@@ -21,6 +21,7 @@ function ChatCache() {
     }
 }
 
+/** create new single instance of chat cache*/
 var chatCacheInstance = new ChatCache();
 
 module.exports = chatCacheInstance;

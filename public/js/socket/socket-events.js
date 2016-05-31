@@ -4,7 +4,8 @@ var socket = io();
 /** get actual token from session storage*/
 var token = TokenHandler.getToken();
 
-var chatMessagesList = $('#chatMessagesList');
+var chatMessagesUl = $('#chatMessagesUl');
+var chatMembersUl = $('#chatMembersUl');
 
 /** subscribe on "connect" event*/
 socket.on('connect', function () {
@@ -19,20 +20,24 @@ socket.on('connect', function () {
         socket.on('all previous messages cache', function (messages) {
             if (messages instanceof Array) {
                 messages.forEach((message)=> {
-                    chatMessagesList.append(liFromChatMessage(message));
+                    chatMessagesUl.append(liFromChatMessage(message));
                 })
             } else console.error("Something wrong, expect JSON array of message objects, but received: %s", messages);
         });
 
         /** subscribe on members list change event */
-        socket.on('members list change', function (membersList) {
-            //TODO this
+        socket.on('chat members list change', function (membersList) {
+            console.log(membersList);
+
+            //refresh members list
+            chatMembersUl.empty();
+            chatMembersUl.append(liNodesFromChatMembers(membersList));
         });
 
         /** while new message from server event, add message to page*/
         socket.on('chat message created', function (msgObj) {
             //console.log("event: %s, obj:%j", "chat message created", msgObj);
-            chatMessagesList.append(liFromChatMessage(msgObj));
+            chatMessagesUl.append(liFromChatMessage(msgObj));
         });
     });
 
@@ -67,4 +72,16 @@ function liFromChatMessage(chatMessageObj) {
             .append(date + " ")
             .append($('<strong>').text(chatMessageObj.userLogin + ": "))
             .append(chatMessageObj.message))
+}
+
+/**
+ * Create array of <li> list items from users.
+ *
+ * @param chatMembers - user arr.
+ * @returns {*} array of <li> elements with users logins.
+ */
+function liNodesFromChatMembers(chatMembers){
+    return $.map(chatMembers,function (member) {
+        return $('<li>',{class: "list-group-item"}).html(member);
+    });
 }
