@@ -75,7 +75,7 @@ router.post('/', function (req, res) {
                 res.send(util.format('User with login %s already exists in DB', newUser.login));
             }
             res.statusCode =  HttpStatus.OK;
-            res.end;
+            res.end();
         });
     }
 });

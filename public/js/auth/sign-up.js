@@ -14,6 +14,7 @@ myApp.controller('UserSignUpCtrl', function ($scope, $http, $window) {
             .post('/api/users', $scope.user)
             .success(function (data, status, headers, config) {
                 $scope.messageToUser = 'User successfully registered';
+                window.location.href = '/index.html';
             })
             .error(function (data, status, headers, config) {
                 console.log("data: %j\r\nstatus: %d\r\n", data, status);
