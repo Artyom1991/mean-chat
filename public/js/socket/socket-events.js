@@ -49,11 +49,24 @@ socket.on('connect', function () {
 
 var chatMessageInput = $('#chatMessageInput');
 
+var sendMessageButton = $('#chatSendMessageButton');
+
 /** send message from input to server*/
-$('#chatSendMessageButton').click(function () {
+//while send button clicked
+sendMessageButton.click(function () {
     socket.emit('chat message', chatMessageInput.val());
     chatMessageInput.val('');
     return false;
+});
+
+//or "enter" key pressed while focused on input.
+chatMessageInput.keydown(function (e) {
+    var key = e.which;
+    if(key == 13)  // the enter key code
+    {
+        sendMessageButton.click();
+        //return false;
+    }
 });
 
 /**

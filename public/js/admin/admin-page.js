@@ -3,7 +3,7 @@ var adminApp = angular.module("AdminPageApp", ['ngRoute']);
 /**
  * Provider of the $route service.
  *
- * Navigating throw admin resources.
+ * Navigating through admin resources.
  */
 adminApp.config(['$routeProvider',
     function($routeProvider) {
