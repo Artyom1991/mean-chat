@@ -2,19 +2,23 @@
 Simple nodejs chat on MEAN stack.
 
 ##Features
-* Allow users to authorize.
-* Chat with each other.
+* Allow users to sign-in/sign-up.
+* Chat with each other by sockets.
 
-Uses Node.js, MongoDB (mongoose) on mLab, Express, Angular. For deploying on Heroku on future.
+[Chat on heroku](https://fierce-crag-68010.herokuapp.com)
 
-Require: node since 5.0 (V8 5.0 for ES6 support)
-[NodeSource Node.js Binary Distributions](https://github.com/nodesource/distributions#debinstall)
+Uses Node.js, MongoDB (mongoose odm) on mLab, Express, Angular.
+
+Require: node since 5.0, npm, bower.
+[Updating npm](https://docs.npmjs.com/getting-started/installing-node)
+[Manage node version](https://www.npmjs.com/package/n)
 
 To install packages:
 
     $ git clone https://github.com/polesskiy-dev/mean-chat
     $ cd mean-chat
-    $ npm install && bower install
+    $ npm install
+    (also npm will invoke bower install in postinstall script)
 
     # Open browser on http://localhost:3000
 
