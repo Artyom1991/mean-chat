@@ -7,7 +7,6 @@ function ChatCache() {
     this._MESSAGES_CACHE_CAPACITY = 100;
     this.messages = [];
 
-
     /**
      * Add message to cache.
      *

@@ -1,15 +1,39 @@
 #MEAN-CHAT
-Simple nodejs chat on MEAN stack.
+Simple Node js chat on MEAN stack.
+
+[Chat deployed on heroku](https://fierce-crag-68010.herokuapp.com)
 
 ##Features
-* Allow users to sign-in/sign-up.
-* Chat with each other by sockets.
+* [x] Allow users to sign-in/sign-up.
+* [ ] Social integration: sign-in/sign-up by vk.com.
+* [x] Chat with each other in real-time (socket.io provided feature).
+* [x] See actual list of chat members.
+* [x] List of all registered users for admin.
+* [ ] Jasmine tests.
 
-[Chat on heroku](https://fierce-crag-68010.herokuapp.com)
+## API definition
+### Auth
+* [ ] POST [/sign-up]() - register form handle.
+* [ ] POST [/sign-in]() - sign in.
 
-Uses Node.js, MongoDB (mongoose odm) on mLab, Express, Angular.
+### User
+* [x] POST [/api/users]() - create new user.
+* [x] GET [/api/users]() - get all users.
+* [x] GET [/api/users/:user_login]() - get user by login.
+* [x] PUT [/api/users/:user_login]() - replace user by new one from request.
+* [x] DELETE [/api/users/:user_login]() - delete user by login.
 
-Require: node since 5.0, npm, bower.
+##Developed on
+
+> Require: node since 4.4, npm, bower.
+
+- | -
+| Node js | socket.io, jwt.io, bcrypt, jasmine |
+| Mongo DB | mongoose ODM, mLab cloud db hosting|
+| Express |
+| Angular |
+| Bootstrap |
+
 [Updating npm](https://docs.npmjs.com/getting-started/installing-node)
 [Manage node version](https://www.npmjs.com/package/n)
 
