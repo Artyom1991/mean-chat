@@ -1,7 +1,6 @@
 /**
  * Users REST API implementation.
  */
-
 var express = require('express');
 var mongoose = require('mongoose');
 var UserSchema = require('../models/user-model');

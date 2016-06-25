@@ -1,40 +1,57 @@
-/**
- * 
- */
-var express = require('express');
-var mongoose = require('mongoose');
-var router = express.Router();
-var UserSchema = require('../models/user-model');
-var jwt         = require('jwt-simple');
-var databaseConfig = require('../config/database'); // get db config file
-var passport	= require('passport');
+const express = require('express');
+const mongoose = require('mongoose');
+const router = express.Router();
+const jwt = require('jwt-simple');
+const HttpStatus = require('http-status-codes');
+const winston = require('winston');
+const nconf = require('nconf');
+
+/** read configuration*/
+nconf.reset();
+nconf.argv()
+    .env()
+    .file({file: 'config/common-config.json'});
+
+const SECRET_KEY = nconf.get("security:secret");
 
 /**
  * Route to authenticate a user
+ *
+ * @method signIn
+ * @param req
+ * @param res
  */
-router.post('/sign-in', function(req, res) {
-    mongoose.model('UserModel').findOne({
-        login: req.body.login
-    }, function(err, user) {
-        if (err) throw err;
-        /** user not found in db*/
-        if (!user) {
-            res.send({success: false, msg: 'Authentication failed. User not found.'});
-        } else {
-            console.log("User %s trying to sing in", user);
-            // check if password matches
-            user.comparePassword(req.body.password, function (err, isMatch) {
-                if (isMatch && !err) {
-                    // if user is found and password is right create a token
-                    var token = jwt.encode(user, databaseConfig.secret);
-                    // return the information including token as JSON
-                    res.json({success: true, token: 'JWT ' + token});
-                } else {
-                    res.send({success: false, msg: 'Authentication failed. Wrong password.'});
-                }
-            });
-        }
-    });
+module.exports.signIn = router.post('/sign-in', function (req, res) {
+    if (req.body.login && req.body.password) {
+        /** find user by login in DB*/
+        mongoose.model('User').findOne({
+            login: req.body.login
+        }, function (err, user) {
+            /** user not found in db*/
+            if (!user || err) {
+                res.statusCode = HttpStatus.UNAUTHORIZED;
+                res.end();
+            } else {
+                winston.info("User trying to log in: %j", user);
+                // check if password matches
+                user.comparePassword(req.body.password, function (err, isMatch) {
+                    if (isMatch && !err) {
+                        // if user is found and password is right create a token
+                        let token = jwt.encode(user, SECRET_KEY);
+
+                        /** response to client with token*/
+                        res.json({token: token});
+                    } else {
+                        res.statusCode = HttpStatus.UNAUTHORIZED;
+                        res.end();
+                    }
+                });
+            }
+        });
+    } else {
+        res.statusCode = HttpStatus.BAD_REQUEST;
+        res.end();
+    }
 });
 
 module.exports = router;

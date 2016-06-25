@@ -5,28 +5,46 @@
  * bcrypt middleware on UserSchema,
  * User password verification function.
  */
+"use strict";
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const nconf = require('nconf');
 
-var mongoose = require('mongoose');
-var MongooseSchema = mongoose.Schema;
-var bcrypt = require('bcrypt');
-var SALT_WORK_FACTOR = 10;
+/** read configuration*/
+nconf.reset();
+nconf.argv().env()
+    .add('secret', {type: 'file', file: 'config/config-common.json'})
+    .add('user-fields-enums', {type: 'file', file: 'config/user-auth-groups.json'});
 
-/** User schema */
-var UserSchema = new MongooseSchema({
+const SALT_WORK_FACTOR = 10;
+const USER_ROLES = nconf.get("user-fields-enums:roles");
+/**
+ * User schema.
+ *
+ * Encapsulates fields validators.
+ */
+var UserSchema = new mongoose.Schema({
     login: {
         type: String,
         unique: true,
-        required: true
+        required: [true, "No login"]
     },
     email: {
         type: String,
         unique: true,
-        required: true
+        match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, "Invalid email!"],
+        required: [true, "No email!"]
     },
     password: {
         type: String,
         required: true
-    }
+    },
+    /** while user register - set by system*/
+    role: {
+        type: String,
+        enum: USER_ROLES,
+        required: [true, "No role"]
+    },
 });
 
 /**
@@ -57,7 +75,7 @@ UserSchema.pre('save', function (next) {
     }
 });
 
-/** 
+/**
  * Password verification.
  *
  * Set compare password function
@@ -72,4 +90,3 @@ UserSchema.methods.comparePassword = function (candidatePassword, cb) {
     });
 };
 
-module.exports = mongoose.model('UserModel', UserSchema);

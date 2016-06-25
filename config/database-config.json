@@ -1,0 +1,27 @@
+{
+  "db-config": {
+    "credentials": {
+      "type": "cloud",
+      "name": "chatusersdb",
+      "host": "ds055762.mlab.com",
+      "port": 55762,
+      "user": "e34dream",
+      "password": "e34dream",
+      "mongod version": "3.0.7"
+    },
+    "options": {
+      "server": {
+        "socketOptions": {
+          "keepAlive": 300000,
+          "connectTimeoutMS": 30000
+        }
+      },
+      "replset": {
+        "socketOptions": {
+          "keepAlive": 300000,
+          "connectTimeoutMS": 30000
+        }
+      }
+    }
+  }
+}

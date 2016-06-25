@@ -3,8 +3,7 @@
  */
 var jwt = require('jwt-simple');
 var mongoose = require('mongoose');
-var databaseConfig = require('../config/database'); // get db config file
-var passport = require('passport');
+var databaseConfig = require('../database'); // get db config file
 
 module.exports = {
     /**

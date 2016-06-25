@@ -6,7 +6,7 @@ var assert = require('chai').assert;
 var userSchema = require('../models/user-model');
 var mongoose = require('mongoose');
 
-var mlab = require('../config/database.js');
+var mlab = require('../database.js');
 describe("Your test", function () {
     var testUser = {
         login:"testLogin",

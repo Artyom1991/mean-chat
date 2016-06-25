@@ -10,7 +10,7 @@ var ExtractJwt = require('passport-jwt').ExtractJwt;
 // load up the user model
 var mongoose = require('mongoose');
 var UserModel = require('../models/user-model');
-var databaseConfig = require('../config/database'); // get db config file
+var databaseConfig = require('../database'); // get db config file
 
 module.exports = function(passport) {
     var opts = {};

@@ -1,0 +1,6 @@
+/**
+ * Some comments
+ */
+class MyClass{
+ 
+}
