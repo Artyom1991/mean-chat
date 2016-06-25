@@ -18,6 +18,7 @@ nconf.argv().env()
 
 const SALT_WORK_FACTOR = 10;
 const USER_ROLES = nconf.get("user-fields-enums:roles");
+
 /**
  * User schema.
  *
@@ -39,22 +40,37 @@ var UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    /** while user register - set by system*/
+    /** while user register - set role automatically*/
     role: {
         type: String,
         enum: USER_ROLES,
         required: [true, "No role"]
-    },
+    }
 });
 
 /**
- * Bcrypt middleware on UserSchema.
+ * Actions performing before VALIDATION of user fields.
+ *
+ * Set user role as default.
+ */
+UserSchema.pre('validate', function (next) {
+    const USER_ROLE_INDEX = 0;
+
+    let user = this;
+    /** set user role as default - USER */
+    user.role = USER_ROLES[USER_ROLE_INDEX];
+
+    return next();
+});
+
+/**
+ * bcrypt middleware for User.
  *
  * Performing before saving User to DB,
  * automatically hash the password before it’s saved to the database.
  */
 UserSchema.pre('save', function (next) {
-    var user = this;
+    let user = this;
     // only hash the password if it has been modified (or is new)
     if (this.isModified('password') || this.isNew) {
         //generate salt
@@ -76,9 +92,9 @@ UserSchema.pre('save', function (next) {
 });
 
 /**
- * Password verification.
+ * Password comparing.
  *
- * Set compare password function
+ * @method comparePassword
  * @param candidatePassword
  * @param cb
  */

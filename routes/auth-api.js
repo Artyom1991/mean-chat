@@ -1,6 +1,5 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const router = express.Router();
 const jwt = require('jwt-simple');
 const HttpStatus = require('http-status-codes');
 const winston = require('winston');
@@ -21,7 +20,7 @@ const SECRET_KEY = nconf.get("security:secret");
  * @param req
  * @param res
  */
-module.exports.signIn = router.post('/sign-in', function (req, res) {
+module.exports.signIn = function (req, res) {
     if (req.body.login && req.body.password) {
         /** find user by login in DB*/
         mongoose.model('User').findOne({
@@ -33,7 +32,8 @@ module.exports.signIn = router.post('/sign-in', function (req, res) {
                 res.end();
             } else {
                 winston.info("User trying to log in: %j", user);
-                // check if password matches
+
+                /** Check that client password matches user from DB password.*/
                 user.comparePassword(req.body.password, function (err, isMatch) {
                     if (isMatch && !err) {
                         // if user is found and password is right create a token
@@ -49,9 +49,8 @@ module.exports.signIn = router.post('/sign-in', function (req, res) {
             }
         });
     } else {
+        winston.info("User trying to log in without login or password");
         res.statusCode = HttpStatus.BAD_REQUEST;
         res.end();
     }
-});
-
-module.exports = router;
+};

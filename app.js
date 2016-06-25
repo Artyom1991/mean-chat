@@ -1,11 +1,10 @@
-var express = require('express');
-var app = express();
-
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+const express = require('express');
+const app = express();
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -14,24 +13,42 @@ app.set('view engine', 'jade');
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-/** user api  routing*/
-app.use('/api/users', require('./routes/users-api'));
+/**
+ * Auth API routing
+ */
+app.post('/sign-in', require('./routes/auth-api').signIn);
+app.post('/sign-up', require('./routes/users-api').createNewUser);
 
-/** auth routing*/
-app.use('/auth-api', require('./routes/auth-api'));
+/**
+ * User API  routing
+ */
 
-/** messages routing*/
+/** GET single user by login*/
+app.get('/api/users/:user_login', require('./routes/users-api').getSingleUser);
+
+/** PUT replace by users from req*/
+app.put('/api/users/:user_login', require('./routes/users-api').replaceUserByNew);
+
+/** DELETE single user*/
+app.delete('/api/users/:user_login', require('./routes/users-api').deleteSingleUser);
+
+/** GET all users from DB*/
+app.get('/api/users', require('./routes/users-api').getAllUsers);
+
+/**
+ * Messages routing
+ */
 app.use('/messages-api', require('./routes/messages-api'));
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+app.use(function (req, res, next) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
 // error handlers
@@ -39,23 +56,23 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
+    app.use(function (err, req, res, next) {
+        res.status(err.status || 500);
+        res.render('error', {
+            message: err.message,
+            error: err
+        });
     });
-  });
 }
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
+app.use(function (err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+        message: err.message,
+        error: {}
+    });
 });
 
 module.exports = app;

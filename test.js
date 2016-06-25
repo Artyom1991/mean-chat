@@ -1,6 +1,0 @@
-/**
- * Some comments
- */
-class MyClass{
- 
-}
