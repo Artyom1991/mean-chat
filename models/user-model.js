@@ -7,6 +7,7 @@
  */
 "use strict";
 const mongoose = require('mongoose');
+const winston = require('winston');
 const bcrypt = require('bcrypt');
 const nconf = require('nconf');
 
@@ -24,7 +25,7 @@ const USER_ROLES = nconf.get("user-fields-enums:roles");
  *
  * Encapsulates fields validators.
  */
-var UserSchema = new mongoose.Schema({
+let UserSchema = new mongoose.Schema({
     login: {
         type: String,
         unique: true,
@@ -64,13 +65,15 @@ UserSchema.pre('validate', function (next) {
 });
 
 /**
- * bcrypt middleware for User.
+ * bcrypt middleware for User and logging.
  *
  * Performing before saving User to DB,
  * automatically hash the password before it’s saved to the database.
  */
 UserSchema.pre('save', function (next) {
     let user = this;
+    winston.info("User %j trying to register", user);
+
     // only hash the password if it has been modified (or is new)
     if (this.isModified('password') || this.isNew) {
         //generate salt
@@ -106,3 +109,4 @@ UserSchema.methods.comparePassword = function (candidatePassword, cb) {
     });
 };
 
+module.exports = mongoose.model('User', UserSchema);

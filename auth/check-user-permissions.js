@@ -16,7 +16,7 @@ const ADMINS_GROUP = nconf.get('user-groups:adminsGroup');
  * Check user permissions.
  *
  * @param user - user obj from DB. {@link /models/user-models.js}
- * @param permissions - permissions obj {@link /auth/permissions.js}
+ * @param permissions - permissions obj {@link ./permissions.js}
  * @param req
  * @param res
  * @param next

@@ -8,6 +8,7 @@ const util = require('util');
 const HttpStatus = require('http-status-codes');
 const passport = require('passport');
 const winston = require('winston');
+const UserModel = require('../models/user-model');
 
 /**
  * Response all users from DB to client.
@@ -67,7 +68,7 @@ module.exports.getSingleUser = function (req, res, next) {
  * @param res
  */
 module.exports.createNewUser = function (req, res) {
-    let newUser = new mongoose.model('User')(req.body);
+    let newUser = new UserModel(req.body);
 
     /** trying to save new user*/
     newUser.save(function (err, user) {

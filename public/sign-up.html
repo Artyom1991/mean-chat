@@ -30,6 +30,7 @@
 <section class="container" ng-controller="UserSignUpCtrl">
     <article class="col-sm-4"></article>
     <article class="col-sm-4">
+
         <!--sign Un form-->
         <form ng-submit="submit()">
             <input ng-model="user.login" type="text" name="user" class="form-control" placeholder="Login" required/>
@@ -41,15 +42,12 @@
             <button type="button" ng-click="signUp()" class="btn btn-lg btn-primary btn-block">Sign up!</button>
         </form>
 
+        <!-- show validation error message if exists-->
         <div ng-show="registrationErrorMessage!=null" class="alert alert-danger">
             <strong>Registration error!</strong> {{registrationErrorMessage}}
         </div>
-
-
-
     </article>
     <article class="col-sm-4"></article>
-
 </section>
 
 </body>
