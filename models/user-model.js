@@ -7,9 +7,9 @@
  */
 "use strict";
 const mongoose = require('mongoose');
-const winston = require('winston');
 const bcrypt = require('bcrypt');
 const nconf = require('nconf');
+const logger = require('../config/logger');
 
 /** read configuration*/
 nconf.reset();
@@ -25,10 +25,11 @@ const USER_ROLES = nconf.get("user-fields-enums:roles");
  *
  * Encapsulates fields validators.
  */
-let UserSchema = new mongoose.Schema({
+var UserSchema = new mongoose.Schema({
     login: {
         type: String,
         unique: true,
+        match: [/^[a-z0-9_-]{3,16}$/, "Invalid login!"],
         required: [true, "No login"]
     },
     email: {
@@ -61,7 +62,7 @@ UserSchema.pre('validate', function (next) {
     /** set user role as default - USER */
     user.role = USER_ROLES[USER_ROLE_INDEX];
 
-    return next();
+    next();
 });
 
 /**
@@ -72,7 +73,7 @@ UserSchema.pre('validate', function (next) {
  */
 UserSchema.pre('save', function (next) {
     let user = this;
-    winston.info("User %j trying to register", user);
+    logger.log('info', 'User trying to register %s', user);
 
     // only hash the password if it has been modified (or is new)
     if (this.isModified('password') || this.isNew) {
@@ -90,7 +91,7 @@ UserSchema.pre('save', function (next) {
             });
         });
     } else {
-        return next();
+        next();
     }
 });
 

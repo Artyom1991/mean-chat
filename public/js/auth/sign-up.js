@@ -1,4 +1,6 @@
 var myApp = angular.module('SignUpApp', []);
+const BAD_REQUEST = 400;
+const CONFLICT = 409;
 
 myApp.controller('UserSignUpCtrl', function ($scope, $http, $window) {
     const SIGN_UP_URL = "/sign-up";
@@ -9,46 +11,31 @@ myApp.controller('UserSignUpCtrl', function ($scope, $http, $window) {
         password: ''
     };
 
-    $scope.confirmPasswordValue = '';
+    $scope.serverRegistrationErrorMessage = "";
 
-    $scope.signUp = function () {
-        /** check user fields */
-        let userValidationObj = validateUserStr($scope.user, $scope.confirmPasswordValue);
-
-        $scope.registrationErrorMessage = "";
-
+    $scope.submitSignUpForm = function () {
         /** if user fields valid*/
-        if ($scope.registrationErrorMessage == "") {
-            console.log($scope.registrationErrorMessage);
+        if ($scope.signUpForm.$valid) {
             $http
                 .post(SIGN_UP_URL, $scope.user)
                 .success(function (data, status, headers, config) {
+                    /** save received auth token */
+                    TokenHandler.saveToken(data.token);
                     //redirect to index page
                     window.location.href = '/index.html';
                 })
-                .error(function (data, status, headers, config) {
-                    console.log("data: %j\r\nstatus: %d\r\n", data, status);
-                    $scope.registrationErrorMessage = data;
+                .error(function (resBody, status, headers, config) {
+                    console.log("Registration problem, server response: %s\r\nstatus: %d\r\n", JSON.stringify(resBody), status);
+                    switch (status) {
+                        case BAD_REQUEST :
+                            $scope.serverRegistrationErrorMessage = resBody.email ? resBody.email.message : resBody.login ? resBody.login.message : resBody.password ? resBody.password.message : "Unexpected validation problem";
+                            break;
+                        case CONFLICT :
+                            $scope.serverRegistrationErrorMessage = "User already exists!";
+                            break;
+                    }
                 });
         }
-    };
-
-    /**
-     * Validate user fields.
-     *
-     * @param user - user obj
-     * @param {string} confirmPassVal
-     * @returns {Object} - user validation object
-     */
-    function validateUserStr(user, confirmPassVal) {
-        let userValidationObj = {
-            invalidLogin: user.login ? false : "Empty login\r\n",
-            invalidEmail: user.email ? false : "Empty email\r\n",
-            invalidPassword: user.password ? false : "Empty password\r\n",
-            invalidConfirmPassVal: (user.password == confirmPassVal) ? false : "Not equal passwords\r\n"
-        };
-
-        return (userValidationObj);
     }
-})
+});
 

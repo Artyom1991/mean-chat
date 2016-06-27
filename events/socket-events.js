@@ -3,12 +3,11 @@
  *
  * @param io socket.io
  */
-var util = require('util');
-var ChatMessage = require('../models/chat-message');
-var chatCacheInstance = require('../events/chat-cache');
-var chatMembersListInstance = require('../events/chat-members-list');
-
-var authCheck = require('../auth/auth-check');
+const util = require('util');
+const ChatMessage = require('../models/chat-message');
+const chatCacheInstance = require('../events/chat-cache');
+const chatMembersListInstance = require('../events/chat-members-list');
+const authCheck = require('../auth/auth-check');
 
 /**
  * Subscribe on authorized user events.
@@ -29,7 +28,7 @@ function subscribeOnAuthorizedUserEvents(socketClient, io, dbUser) {
         console.log("incoming message from %s by socket id %s : %s",dbUser.login, socketClient.id, messagePlainText);
 
         /** create message obj from incoming message text*/
-        var receivedMsg = new ChatMessage(messagePlainText, dbUser.login);
+        let receivedMsg = new ChatMessage(messagePlainText, dbUser.login);
 
         /** store message in cache*/
         chatCacheInstance.pushMessage(receivedMsg);

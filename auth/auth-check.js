@@ -4,6 +4,15 @@
 var jwt = require('jwt-simple');
 var mongoose = require('mongoose');
 var databaseConfig = require('../database'); // get db config file
+const nconf = require('nconf');
+
+/** read configuration*/
+nconf.reset();
+nconf.argv()
+    .env()
+    .file({file: 'config/common-config.json'});
+
+const SECRET_KEY = nconf.get("security:secret");
 
 module.exports = {
     /**
@@ -14,11 +23,15 @@ module.exports = {
      * @param unAuthorizedCallback - callback if user unauthorized
      * @param authorizedCallback(user) - callback if user authorized
      */
-    checkAuthToken:function (jwtToken, unAuthorizedCallback, authorizedCallback) {
+    checkAuthToken:function (jwtToken, unAuthorizedCallback, authorizedCallback) {        
         if (!jwtToken) return unAuthorizedCallback();
 
         var encodedToken = jwtToken.split(' ')[1];
-        var tokenUser = jwt.decode(encodedToken, databaseConfig.secret);
+        try {
+            var tokenUser = jwt.decode(encodedToken, SECRET_KEY);
+        } catch (err){
+            console.error(err)
+        }
 
         /** fetch user from DB by login from jwtToken*/
         mongoose.model('UserModel').findOne({

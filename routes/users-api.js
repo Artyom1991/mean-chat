@@ -6,9 +6,18 @@ const mongoose = require('mongoose');
 const jwt = require('jwt-simple');
 const util = require('util');
 const HttpStatus = require('http-status-codes');
-const passport = require('passport');
+const logger = require('../config/logger');
 const winston = require('winston');
 const UserModel = require('../models/user-model');
+const nconf = require('nconf');
+
+/** read configuration*/
+nconf.reset();
+nconf.argv()
+    .env()
+    .file({file: 'config/common-config.json'});
+
+const SECRET_KEY = nconf.get("security:secret");
 
 /**
  * Response all users from DB to client.
@@ -19,7 +28,7 @@ const UserModel = require('../models/user-model');
  * @param next
  */
 module.exports.getAllUsers = function (req, res, next) {
-    winston.info("Retrieving all users from DB");
+    logger.log("info", "Retrieving all users from DB");
     mongoose.model('User').find({}, function (err, users) {
         if (err || !users) {
             res.statusCode = HttpStatus.NO_CONTENT;
@@ -73,11 +82,20 @@ module.exports.createNewUser = function (req, res) {
     /** trying to save new user*/
     newUser.save(function (err, user) {
         if (err || !user) {
-            winston('error', "Error while saving user to DB, err: %s", err);
-            res.statusCode = HttpStatus.CONFLICT;
-            res.end();
+            console.error("Error while saving user to DB %j\r\n, messages %s", err);
+            //validation problem
+            if (err.name === "ValidationError") {
+                res.statusCode = HttpStatus.BAD_REQUEST;
+                res.send(err.errors);
+            } else {
+                //user already exists in DB
+                res.statusCode = HttpStatus.CONFLICT;
+                res.end();
+            }
         } else {
-            res.json(user);
+            /** response with auth token - log in*/
+            let token = jwt.encode(user, SECRET_KEY);
+            res.json({token: token});
         }
     });
 };
@@ -94,7 +112,7 @@ module.exports.replaceUserByNew = function (req, res) {
     mongoose.model('User').findOne({login: req.params.user_login},
         function (err, user) {
             if (err) {
-                winston.log('error', "While requesting for user with login %s error occurs: %s", req.params.login, err);
+                logger.log('error', "While requesting for user with login %s error occurs: %s", req.params.login, err);
                 res.statusCode = HttpStatus.NOT_FOUND;
                 res.end();
             }
@@ -121,7 +139,7 @@ module.exports.deleteSingleUser = function (req, res) {
     mongoose.model('User').remove({login: req.params.user_login},
         function (err, user) {
             if (err) {
-                winston.log('error', "While deleting user with login %s error occurs: %s", req.params.login, err);
+                logger.log('error', "While deleting user with login %s error occurs: %s", req.params.login, err);
                 res.statusCode = HttpStatus.CONFLICT;
                 res.end();
             }
