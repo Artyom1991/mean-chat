@@ -9,7 +9,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const nconf = require('nconf');
-const logger = require('../config/logger');
+const logger = require('../utils/logger');
+const log = require('../utils/logger')(module);
 
 /** read configuration*/
 nconf.reset();
@@ -73,7 +74,7 @@ UserSchema.pre('validate', function (next) {
  */
 UserSchema.pre('save', function (next) {
     let user = this;
-    logger.log('info', 'User trying to register %s', user);
+    log.info('User trying to register %s', JSON.stringify(user));
 
     // only hash the password if it has been modified (or is new)
     if (this.isModified('password') || this.isNew) {

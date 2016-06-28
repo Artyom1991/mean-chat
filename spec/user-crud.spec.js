@@ -5,12 +5,13 @@ const nconf = require('nconf');
 // get test user obj
 nconf.reset();
 nconf.argv().env()
-    .add('testUser', {type: 'file', file: 'spec/test-users/test-user.json'});
+    .add('testUser', {type: 'file', file: 'spec/resources/test-user.json'});
 
 let testUser = nconf.get("testUser");
 
 /** URL */
 const BASE_URL = `http://localhost:3000`;
+const REGISTRATION_URL = `${BASE_URL}/sign-up`;
 const LOGIN_URL = `${BASE_URL}/sign-in`;
 const USERS_API_URL = `${BASE_URL}/api/users`;
 const TEST_USER_URL = `${USERS_API_URL}/${testUser.login}`;
@@ -25,7 +26,7 @@ describe("CRUD", function () {
     beforeEach(function (done) {
         request.post({
             headers: {'content-type': 'application/json'},
-            url: USERS_API_URL,
+            url: REGISTRATION_URL,
             body: JSON.stringify(testUser)
         }, function (error, response, body) {
             console.log("Creating new user response: %s", body);

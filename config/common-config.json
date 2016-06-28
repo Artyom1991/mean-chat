@@ -1,4 +1,4 @@
-{
+  {
   "security": {
     "secret": "chat",
     "SALT_WORK_FACTOR": 10

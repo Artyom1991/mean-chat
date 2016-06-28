@@ -6,8 +6,10 @@ const mongoose = require('mongoose');
 const jwt = require('jwt-simple');
 const util = require('util');
 const HttpStatus = require('http-status-codes');
-const logger = require('../config/logger');
+const logger = require('../utils/logger');
 const winston = require('winston');
+const log = require('../utils/logger')(module);
+
 const UserModel = require('../models/user-model');
 const nconf = require('nconf');
 
@@ -28,7 +30,7 @@ const SECRET_KEY = nconf.get("security:secret");
  * @param next
  */
 module.exports.getAllUsers = function (req, res, next) {
-    logger.log("info", "Retrieving all users from DB");
+    log.info("Retrieving all users from DB");
     mongoose.model('User').find({}, function (err, users) {
         if (err || !users) {
             res.statusCode = HttpStatus.NO_CONTENT;
@@ -50,11 +52,10 @@ module.exports.getAllUsers = function (req, res, next) {
  * @param next
  */
 module.exports.getSingleUser = function (req, res, next) {
-    mongoose.model('UserModel').findOne({login: req.params.user_login},
+    mongoose.model('User').findOne({login: req.params.user_login},
         function (err, user) {
             if (err) {
-                console.log("While requesting for user with login " +
-                    req.params.login + " error occurs: " + err);
+                log.error("While requesting for user with login %s, err: %s", req.params.login, err);
                 res.statusCode = HttpStatus.NOT_FOUND;
                 res.end();
             }
@@ -82,7 +83,7 @@ module.exports.createNewUser = function (req, res) {
     /** trying to save new user*/
     newUser.save(function (err, user) {
         if (err || !user) {
-            console.error("Error while saving user to DB %j\r\n, messages %s", err);
+            log.log('error', "Error while saving user to DB %j\r\n, messages %s", err);
             //validation problem
             if (err.name === "ValidationError") {
                 res.statusCode = HttpStatus.BAD_REQUEST;
@@ -112,7 +113,7 @@ module.exports.replaceUserByNew = function (req, res) {
     mongoose.model('User').findOne({login: req.params.user_login},
         function (err, user) {
             if (err) {
-                logger.log('error', "While requesting for user with login %s error occurs: %s", req.params.login, err);
+                log.log('error', "While requesting for user with login %s error occurs: %s", req.params.login, err);
                 res.statusCode = HttpStatus.NOT_FOUND;
                 res.end();
             }

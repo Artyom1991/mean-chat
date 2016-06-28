@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const jwt = require('jwt-simple');
 const HttpStatus = require('http-status-codes');
 const winston = require('winston');
+const log = require('../utils/logger')(module);
 const nconf = require('nconf');
 
 /** read configuration*/
@@ -31,7 +32,7 @@ module.exports.signIn = function (req, res) {
                 res.statusCode = HttpStatus.UNAUTHORIZED;
                 res.end();
             } else {
-                winston.info("User trying to log in: %j", user);
+                log.info("User trying to log in: %s", JSON.stringify(user));
 
                 /** Check that client password matches user from DB password.*/
                 user.comparePassword(req.body.password, function (err, isMatch) {

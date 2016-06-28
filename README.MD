@@ -27,7 +27,7 @@ Simple Node js chat on MEAN stack.
 
 > Require: node since 4.4, npm, bower.
 
-| - | - |
+| --- | --- |
 | Node js | socket.io, jwt.io, bcrypt, nconf, winston, jasmine |
 | Mongo DB | mongoose ODM, mLab cloud db hosting|
 | Express |
