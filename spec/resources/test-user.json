@@ -1,6 +1,6 @@
 {
   "testUser": {
-    "login": "admin",
+    "login": "testuser",
     "email": "mail1@gmail.com",
     "password": "vasiliy1"
   }

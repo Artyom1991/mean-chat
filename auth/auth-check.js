@@ -3,7 +3,7 @@
  */
 var jwt = require('jwt-simple');
 var mongoose = require('mongoose');
-var databaseConfig = require('../database'); // get db config file
+var databaseConfig = require('../utils/database-connect'); // get db config file
 const nconf = require('nconf');
 
 /** read configuration*/

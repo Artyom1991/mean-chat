@@ -83,20 +83,18 @@ module.exports.createNewUser = function (req, res) {
     /** trying to save new user*/
     newUser.save(function (err, user) {
         if (err || !user) {
-            log.log('error', "Error while saving user to DB %j\r\n, messages %s", err);
+            log.log('error', "Error while saving user to DB %s, %s", JSON.stringify(user), String(err));
             //validation problem
             if (err.name === "ValidationError") {
-                res.statusCode = HttpStatus.BAD_REQUEST;
-                res.send(err.errors);
+                res.status(HttpStatus.BAD_REQUEST).send(err.errors);
             } else {
                 //user already exists in DB
-                res.statusCode = HttpStatus.CONFLICT;
-                res.end();
+                res.status(HttpStatus.CONFLICT).end();
             }
         } else {
             /** response with auth token - log in*/
             let token = jwt.encode(user, SECRET_KEY);
-            res.json({token: token});
+            res.status(HttpStatus.CREATED).json({token: token});
         }
     });
 };
@@ -105,27 +103,31 @@ module.exports.createNewUser = function (req, res) {
  * Replace user by new one from client request.
  *
  * @method replaceUserByNew
- * @apiParam {String} user_login - user's login to find by
+ * @apiParam {string} user_login - user's login to find by
  * @param req
  * @param res
  */
 module.exports.replaceUserByNew = function (req, res) {
-    mongoose.model('User').findOne({login: req.params.user_login},
-        function (err, user) {
-            if (err) {
-                log.log('error', "While requesting for user with login %s error occurs: %s", req.params.login, err);
-                res.statusCode = HttpStatus.NOT_FOUND;
-                res.end();
-            }
-            else {
-                if (user)
-                    res.json(user);
-                else {
-                    res.statusCode = HttpStatus.NO_CONTENT;
-                    res.end();
+    let userLogin = req.params.user_login;
+    let newUser = req.body;
+    log.info("Updating user %s by %s", userLogin, JSON.stringify(req.body));
+
+    //FIXME hashing user password while updating
+    if (newUser) {
+        mongoose.model('User').findOneAndUpdate({login: userLogin}, newUser, {new: true},
+            function (err, user) {
+                if (err) {
+                    log.log('error', "While requesting for user with login %s error occurs: %s", req.params.login, String(err));
+                    res.status(HttpStatus.NOT_FOUND).end();
                 }
-            }
-        })
+                else {
+                    if (user)
+                        res.json(user);
+                    else
+                        res.status(HttpStatus.NO_CONTENT).end();
+                }
+            })
+    } else res.status(HttpStatus.BAD_REQUEST).end();
 };
 
 /**
@@ -136,7 +138,7 @@ module.exports.replaceUserByNew = function (req, res) {
  * @param req
  * @param res
  */
-module.exports.deleteSingleUser = function (req, res) {
+module.exports.deleteSingleUser = function (req, res, next) {
     mongoose.model('User').remove({login: req.params.user_login},
         function (err, user) {
             if (err) {

@@ -27,90 +27,97 @@ const TEST_USER_URL = `${USERS_API_URL}/${testUser.login}`;
 describe("CRUD", function () {
     let authToken = "";
 
-    // /** create new test user*/
-    // xbeforeEach(function (done) {
-    //     async.waterfall([
-    //             function (callback) {
-    //                 console.log("sending user registration request");
-    //                 request.post({
-    //                     headers: {'content-type': 'application/json'},
-    //                     url: REGISTRATION_URL,
-    //                     body: JSON.stringify(testUser)
-    //                 }, callback(error, response, body))
-    //             },
-    //             function (error, response, body, next) {
-    //                 console.log("Creating new user response: %j", body);
-    //                 expect(response.statusCode).toBe(200);
-    //                 callback(null, body);
-    //             }
-    //         ],
-    //         function (err, result) {
-    //             console.log("finally, res: %j", body);
-    //             done();
-    //         }
-    //     )
-    //     ;
-    //
-    //     // request.post({
-    //     //     headers: {'content-type': 'application/json'},
-    //     //     url: REGISTRATION_URL,
-    //     //     body: JSON.stringify(testUser)
-    //     // }, function (error, response, body) {
-    //     //     console.log("Creating new user response: %s", body);
-    //     //     expect(response.statusCode).toBe(200);
-    //     //
-    //     //     //log in
-    //     //     request.post({
-    //     //             headers: {'content-type': 'application/json'},
-    //     //             url: LOGIN_URL,
-    //     //             body: JSON.stringify(testUser)
-    //     //         },
-    //     //         function (error, response, body) {
-    //     //             // console.log("token:\r\n%s", JSON.parse(body).token);
-    //     //             authToken = JSON.parse(body).token;
-    //     //             expect(response.statusCode).toBe(200);
-    //     //             done();
-    //     //         });
-    //     // });
-    // });
-    //
-    // /** delete recently created test user */
-    // xafterEach(function (done) {
-    //     request({
-    //             headers: {'Authorization': authToken},
-    //             method: 'DELETE',
-    //             url: TEST_USER_URL
-    //         },
-    //         function (error, response, body) {
-    //             console.log("Response for single user: \r\n%s", body);
-    //             expect(response.statusCode).toBe(200);
-    //             done();
-    //         }
-    //     );
-    // });
+    /** create new test user*/
+    beforeEach(function (done) {
+        async.waterfall([
+                /** register new test user*/
+                    function (next) {
+                    request.post({
+                        headers: {'content-type': 'application/json'},
+                        url: REGISTRATION_URL,
+                        body: JSON.stringify(testUser)
+                    }, next)
+                },
+                function (response, body, next) {
+                    expect(response.statusCode).toBe(201);
+                    next();
+                },
+                /** log in*/
+                    function (next) {
+                    request.post({
+                        headers: {'content-type': 'application/json'},
+                        url: LOGIN_URL,
+                        body: JSON.stringify(testUser)
+                    }, next)
+                },
+                function (response, body, next) {
+                    authToken = JSON.parse(body).token;
+                    expect(response.statusCode).toBe(200);
+                    next(null, body);
+                }],
+            function (err, result) {
+                expect(err).toBe(null);
+                done();
+            }
+        );
+    });
 
+    /** delete recently created test user */
+    afterEach(function (done) {
+        async.waterfall([
+                function (next) {
+                    request({
+                        headers: {'Authorization': authToken},
+                        method: 'DELETE',
+                        url: TEST_USER_URL
+                    }, next)
+                },
+                function (response, body, next) {
+                    expect(response.statusCode).toBe(200);
+                    next(null, body);
+                }],
+            function (err, result) {
+                expect(err).toBe(null);
+                done();
+            }
+        )
+    });
+
+    /** fetch single user*/
     it("GET single user, returns status code 200", function (done) {
-        // request.get({
-        //     headers: {'Authorization': authToken},
-        //     url: TEST_USER_URL,
-        //     body: JSON.stringify(testUser)
-        // }, function (error, response, body) {
-        //     console.log("Response for single user: \r\n%j", body);
-        //     expect(response.statusCode).toBe(200);
-        //     done();
-        // });
-
         async.waterfall([
             function (callback) {
-                console.log("Sending request");
                 request.get({
                     headers: {'Authorization': authToken},
+                    url: TEST_USER_URL
+                }, callback);
+            },
+            function (response, body) {
+                console.log("Response for fetching single user: \r\n%s", body);
+                expect(response.statusCode).toBe(200);
+                done();
+            }
+        ]);
+    });
+
+    /** update single user*/
+    it("PUT - update single user", function (done) {
+        //update email
+        testUser.email = "updatedemal@mail.ru";
+        async.waterfall([
+            function (callback) {
+                console.log("Sending PUT request with new user %s", JSON.stringify(testUser));
+                request.put({
+                    headers: {
+                        'Authorization': authToken,
+                        'content-type': 'application/json'
+                    },
                     url: TEST_USER_URL,
                     body: JSON.stringify(testUser)
                 }, callback);
             },
             function (response, body) {
-                console.log("Response for single user: \r\n%j", body);
+                console.log("Response for updating single user: \r\n%s", body);
                 expect(response.statusCode).toBe(200);
                 done();
             }
