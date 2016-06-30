@@ -9,12 +9,12 @@ Simple Node js chat on MEAN stack.
 * [x] Chat with each other in real-time (socket.io provided feature).
 * [x] See actual list of chat members.
 * [x] List of all registered users for admin.
-* [ ] Jasmine tests.
+* [x] Jasmine tests.
 
 ## API definition
 ### Auth
-* [ ] POST [/sign-up]() - register form handle.
-* [ ] POST [/sign-in]() - sign in.
+* [x] POST [/sign-up]() - register.
+* [x] POST [/sign-in]() - sign in.
 
 ### User
 * [x] POST [/api/users]() - create new user.
@@ -56,4 +56,8 @@ Test user access:
 
     login: user
     pass: user
+
+Generate [apiDoc](http://apidocjs.com/)
+    
+    sudo apidoc -i ./ -f "app.js" -o ./doc
 

@@ -1,6 +1,9 @@
 /**
- * @see <a href="https://www.npmjs.com/package/jasmine-node"></a>
- * @see <a href="https://www.npmjs.com/package/async"></a>
+ * Test User CRUD
+ *
+ * @see <a href="https://www.npmjs.com/package/jasmine-node">jasmine for node</a>
+ * @see <a href="https://www.npmjs.com/package/async">async</a>
+ * @author polesskiy
  */
 const request = require("request");
 const util = require('util');
@@ -10,19 +13,27 @@ const nconf = require('nconf');
 // get test user obj
 nconf.reset();
 nconf.argv().env()
-    .add('testUser', {type: 'file', file: 'spec/resources/test-user.json'});
+    .add('testUser', {type: 'file', file: 'spec/resources/test-user.json'})
+    .add('adminUser', {type: 'file', file: 'spec/resources/admin-user.json'});
 
 let testUser = nconf.get("testUser");
+let adminUser = nconf.get("adminUser");
+
+console.log(testUser, adminUser);
 
 /** URL */
+//auth
 const BASE_URL = `http://localhost:3000`;
 const REGISTRATION_URL = `${BASE_URL}/sign-up`;
 const LOGIN_URL = `${BASE_URL}/sign-in`;
+//user api
 const USERS_API_URL = `${BASE_URL}/api/users`;
 const TEST_USER_URL = `${USERS_API_URL}/${testUser.login}`;
 
 /**
- * Test user CRUD
+ * Test user CRUD.
+ *
+ * expect that admin user already exists in DB.
  */
 describe("CRUD", function () {
     let authToken = "";
@@ -124,14 +135,41 @@ describe("CRUD", function () {
         ]);
     });
 
-    xit("GET all users from not-admin user", function (done) {
-        request.get({
-            headers: {'Authorization': authToken},
-            url: USERS_API_URL
-        }, function (error, response, body) {
-            expect(response.statusCode).toBe(200);
-            done();
-        });
+    it("GET all users from admin account", function (done) {
+        let adminAuthToken = null;
+
+        async.waterfall([
+                /** log in as admin*/
+                    function (next) {
+                    request.post({
+                        headers: {'content-type': 'application/json'},
+                        url: LOGIN_URL,
+                        body: JSON.stringify(adminUser)
+                    }, next)
+                },
+                function (response, body, next) {
+                    adminAuthToken = JSON.parse(body).token;
+                    expect(response.statusCode).toBe(200);
+                    next();
+                },
+                /** get all users from server*/
+                    function (next) {
+                    request.get({
+                        headers: {'Authorization': adminAuthToken},
+                        url: USERS_API_URL
+                    }, next)
+                },
+                function (response, body, next) {
+                    expect(response.statusCode).toBe(200);
+                    next(null, body);
+                }
+            ],
+            function (err, usersArr) {
+                expect(err).toBe(null);
+                console.log("All users from server:\r\n%s", usersArr);
+                done();
+            }
+        )
     });
 })
 ;
