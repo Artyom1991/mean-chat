@@ -4,8 +4,8 @@
 const util = require('util');
 const ChatMessage = require('../models/chat-message');
 const chatCacheInstance = require('../events/chat-cache');
-const chatMembersListInstance = require('../events/chat-members-list');
-const authCheck = require('../auth/auth-check');
+const chatMembersList = require('../events/chat-members-list');
+const authCheck = require('../auth/check-auth-token');
 const log = require('../utils/logger')(module);
 
 /**
@@ -41,10 +41,10 @@ function subscribeOnAuthorizedUserEvents(socketClient, io, dbUser) {
         log.info('user %s disconnected', dbUser.login);
 
         //remove from chat members list
-        chatMembersListInstance.removeMemberByLogin(dbUser.login);
+        chatMembersList.removeMemberByLogin(dbUser.login);
 
         //notify all that user left chat
-        io.emit('chat members list change', chatMembersListInstance.getLogins());
+        io.emit('chat members list change', chatMembersList.getLogins());
     });
 }
 
@@ -67,24 +67,22 @@ module.exports = function (io) {
              * pass cb function for success and not success (unauthorized)
              */
             authCheck.checkAuthToken(token,
-                /** invalid token*/
-                function () {
-                    /** if user can't be authorized (wrong token), respond to user*/
-                    io.to(client).emit('authorization failed', "");
-                },
-
                 /** valid token*/
-                function (dbUser) {
-                    log.info("user %j authorized", dbUser);
+                (dbUser) => {
+                    log.info("user %s authorized", JSON.stringify(dbUser));
+
                     //subscribe on events
                     subscribeOnAuthorizedUserEvents(client, io, dbUser);
 
                     //add new user to chat members list
-                    chatMembersListInstance.pushMember(dbUser);
+                    chatMembersList.pushMember(dbUser);
 
-                    //notify all that new user connected
-                    io.emit('chat members list change', chatMembersListInstance.getLogins());
-                }
+                    //notify all subscribed users that new user connected
+                    io.emit('chat members list change', chatMembersList.getLogins());
+                },
+
+                /** if user can't be authorized (wrong token), respond to user*/
+                (err)=>io.to(client).emit('authorization failed', err)
             );
         });
     })

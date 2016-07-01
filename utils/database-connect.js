@@ -5,7 +5,7 @@
  */
 "use strict";
 const mongoose = require('mongoose');
-const winston = require('winston');
+const log = require('../utils/logger')(module);
 const nconf = require('nconf');
 
 // read configuration
@@ -25,14 +25,16 @@ const DB_URL = `mongodb://${db.credentials.user}:${db.credentials.password}@${db
  * plenty of time in most operating environments.
  */
 (function () {
+    log.info("Trying to connect to DB by %s", DB_URL);
+
     /** connect to mLab*/
     mongoose.connect(DB_URL, db.options);
 
     var conn = mongoose.connection;
 
     //while error
-    conn.on('error', ()=>winston.log('error', "Error while connecting to DB: %s", DB_URL));
+    conn.on('error', ()=>log.log('error', "Error while connecting to DB: %s", DB_URL));
 
     //while connection opens successfully
-    conn.once('open', ()=>winston.info("Database connection established to %s", DB_URL));
+    conn.once('open', ()=>log.info("Database connection established to %s", DB_URL));
 })();

@@ -111,11 +111,6 @@ app.delete('/api/users/:user_login', require('./routes/users-api').deleteSingleU
  */
 app.get('/api/users', require('./routes/users-api').getAllUsers);
 
-/**
- * Messages routing
- */
-app.use('/messages-api', require('./routes/messages-api'));
-
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     var err = new Error('Not Found');

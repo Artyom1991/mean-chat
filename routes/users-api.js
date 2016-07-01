@@ -6,12 +6,10 @@ const mongoose = require('mongoose');
 const jwt = require('jwt-simple');
 const util = require('util');
 const HttpStatus = require('http-status-codes');
-const logger = require('../utils/logger');
-const winston = require('winston');
-const log = require('../utils/logger')(module);
-
-const UserModel = require('../models/user-model');
 const nconf = require('nconf');
+
+const log = require('../utils/logger')(module);
+const UserModel = require('../models/user-model');
 
 /** read configuration*/
 nconf.reset();
@@ -25,6 +23,7 @@ const SECRET_KEY = nconf.get("security:secret");
  * Response all users from DB to client.
  *
  * @method getAllUsers.
+ *
  * @param req
  * @param res
  * @param next
@@ -47,6 +46,7 @@ module.exports.getAllUsers = function (req, res, next) {
  *
  * @method getSingleUser
  * @apiParam {String} :user_login user's login to find by
+ *
  * @param req
  * @param res
  * @param next
@@ -142,7 +142,7 @@ module.exports.deleteSingleUser = function (req, res, next) {
     mongoose.model('User').remove({login: req.params.user_login},
         function (err, user) {
             if (err) {
-                logger.log('error', "While deleting user with login %s error occurs: %s", req.params.login, err);
+                log.log('error', "While deleting user with login %s error occurs: %s", req.params.login, err);
                 res.statusCode = HttpStatus.CONFLICT;
                 res.end();
             }
