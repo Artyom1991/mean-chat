@@ -27,16 +27,51 @@
 </header>
 <section class="container" ng-controller="UserSignInCtrl">
     <article class="col-sm-4"></article>
-    <article class="col-sm-4">
-        <!--sign In form-->
-        <span ng-show="isAuthenticated">{{welcome}}</span>
 
-        <form ng-show="!isAuthenticated" ng-submit="submit()">
-            <input ng-model="user.login" type="text" name="user" class="form-control" placeholder="Login" required/>
-            <input ng-model="user.password" type="password" name="pass" class="form-control" placeholder="Password" required/>
-            <button type="button" ng-click="signIn()" class="btn btn-lg btn-primary btn-block">Sign in</button>
-        </form>
-        <div>{{error}}</div>
+    <article class="col-sm-4" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- modal header -->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">Please, sign in</h4>
+                </div>
+                <div class="modal-body">
+                    <!--sign In form-->
+                    <span ng-show="isAuthenticated">{{welcome}}</span>
+
+                    <form ng-show="!isAuthenticated" ng-submit="submitSignInForm()" name="signInForm">
+                        <fieldset>
+                            <!-- login -->
+                            <div class="form-group"
+                                 ng-class="{'has-error': signInForm.formLogin.$touched && signInForm.formLogin.$invalid}">
+                                <label ng-show="signInForm.formLogin.$touched && signInForm.formLogin.$invalid"
+                                       class="control-label" for="userLoginInput">Invalid login</label>
+                                <input id="userLoginInput" ng-model="user.login"
+                                       type="text" name="formLogin" class="form-control" placeholder="Login"
+                                       required=""/>
+                            </div>
+
+                            <!-- password -->
+                            <div class="form-group"
+                                 ng-class="{'has-error': signInForm.formPassword.$touched && signInForm.formPassword.$invalid}">
+                                <label ng-show="signInForm.formPassword.$touched && signInForm.formPassword.$invalid"
+                                       class="control-label" for="userPasswordInput">Invalid password</label>
+                                <input id="userPasswordInput" ng-model="user.password" type="password"
+                                       name="formPassword" class="form-control" placeholder="Password" required=""/>
+                            </div>
+                        </fieldset>
+                        <button type="button" ng-disabled="signInForm.$invalid" ng-click="submitSignInForm()"
+                                class="btn btn-primary btn-block">Sign in
+                        </button>
+                    </form>
+                    <!-- show validation error message if exists-->
+                    <div ng-show="loginErrorMessage !== ''" class="alert alert-danger">
+                        <strong>Login problem!</strong> {{loginErrorMessage}}
+                    </div>
+                </div>
+            </div>
+        </div>
         <!--div ng-show="isAuthenticated">
             <br>
             <div>{{message}}</div>

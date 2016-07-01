@@ -1,6 +1,8 @@
 var myApp = angular.module('SignInApp', []);
 
 myApp.controller('UserSignInCtrl', function ($scope, $http, $window) {
+    const SIGN_IN_URL = "/sign-in";
+
     $scope.user = {
         login: '',
         password: ''
@@ -10,15 +12,18 @@ myApp.controller('UserSignInCtrl', function ($scope, $http, $window) {
     $scope.welcome = '';
     $scope.message = '';
 
+    $scope.loginErrorMessage = "";
+
     /**
      * Sign in
      *
+     * @method submitSignInForm
      * @success save received token to session storage
      * @error delete token from session storage
      */
-    $scope.signIn = function () {
+    $scope.submitSignInForm = function () {
         $http
-            .post('/auth-api/sign-in', $scope.user)
+            .post(SIGN_IN_URL, $scope.user)
             .success(function (data, status, headers, config) {
                 /** save received token */
                 TokenHandler.saveToken(data.token);
@@ -31,12 +36,15 @@ myApp.controller('UserSignInCtrl', function ($scope, $http, $window) {
                 delete $window.sessionStorage.token;
 
                 // Handle login errors here
-                $scope.error = 'Error: Invalid login or password';
+                $scope.loginErrorMessage = 'Error: Invalid login or password';
                 $scope.welcome = '';
             });
     };
 });
 
+/**
+ * Some angular magic.
+ */
 myApp.factory('authInterceptor', function ($rootScope, $q, $window) {
     return {
         request: function (config) {

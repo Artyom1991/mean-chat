@@ -135,6 +135,7 @@ describe("CRUD", function () {
         ]);
     });
 
+    /** get all users by admin account */
     it("GET all users from admin account", function (done) {
         let adminAuthToken = null;
 
@@ -170,6 +171,5 @@ describe("CRUD", function () {
                 done();
             }
         )
-    });
-})
-;
+    })
+});

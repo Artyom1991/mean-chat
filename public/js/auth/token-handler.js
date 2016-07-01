@@ -1,16 +1,18 @@
 /**
  * Token handler
+ *
  * @namespace
  * @type {{saveToken, getUserProfile, getToken}}
  */
 var TokenHandler = (function () {
     /**
      * Parse base64 string
+     *
      * @see {@link https://github.com/davidchambers/Base64.js}
      * @param str string to parse
      * @returns {string}
      */
-    function url_base64_decode(str) {``
+    function url_base64_decode(str) {
         var output = str.replace('-', '+').replace('_', '/');
         switch (output.length % 4) {
             case 0:
@@ -30,17 +32,20 @@ var TokenHandler = (function () {
     return {
         /**
          * Save token to session storage.
-         * @param token to save
+         *
+         * @param token - auth token
          */
         saveToken: function (token) {
             sessionStorage.token = token;
         },
+
         /**
          * Get authorized user login from storage,
          * if exists.
+         *
          * @returns user login or null
          */
-        getUserProfile: function() {
+        getUserProfile: function () {
             var LOGIN_INDEX_IN_JWT_TOKEN = 1;
             var tokenJWT = sessionStorage.getItem('token');
             //if no token in session storage return null
@@ -51,11 +56,13 @@ var TokenHandler = (function () {
             //user profile
             return (JSON.parse(url_base64_decode(encodedProfile)));
         },
+
         /**
          * Get token from session storage
-         * @returns {string|*|token}
+         *
+         * @returns {string} auth token
          */
-        getToken: function(){
+        getToken: function () {
             return sessionStorage.token;
         }
     }
