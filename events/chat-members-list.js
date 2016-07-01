@@ -1,3 +1,10 @@
+/**
+ * Chat members list.
+ *
+ * Container for users that online in chat.
+ *
+ * @constructor
+ */
 function ChatMembersList() {
     this.members = [];
 
@@ -11,24 +18,20 @@ function ChatMembersList() {
 
     /**
      * Get online members logins
-     * @returns {Array} - array of logins.
+     * @returns {Array} - array of user logins.
      */
-    this.getMembersLogins = function () {
+    this.getLogins = function () {
         return this.members.map(function (member) {
             return member.login;
         });
-    }
+    };
 
     /**
      * Remove member from chat members list by login.
-     * @param login - members to delete login.
+     * @param login - member's login to delete.
      */
     this.removeMemberByLogin = function (login) {
-        var userIndex = this.members.findIndex(function (member) {
-            return member.login == login;
-        });
-
-        this.members.splice(userIndex, 1);
+        this.members.splice(this.members.findIndex(login), 1);
     }
 }
 /** create new single instance of chat members list*/

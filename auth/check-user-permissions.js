@@ -1,7 +1,7 @@
 "use strict";
 const HttpStatus = require('http-status-codes');
-const Permissions = require('./permissions');
-const winston = require('winston');
+const Permissions = require('./Permissions');
+const log = require('../utils/logger')(module);
 const nconf = require('nconf');
 
 /** read configuration*/
@@ -47,7 +47,7 @@ module.exports.onlyAdmin = function (req, res, next) {
     //get user from special request field.
     let user = res.locals;
     let adminPermissions = new Permissions(null, ADMINS_GROUP.roles);
-    winston.log("info", "Admin permissions checking, permissions: %j\r\n user: %j", adminPermissions, user);
+    log.info("Admin permissions checking, permissions: %j\r\n user: %j", adminPermissions, user);
     checkPermissions(adminPermissions, user, req, res, next);
 };
 
@@ -63,6 +63,6 @@ module.exports.singleUserAndAdmin = function (req, res, next) {
     //get user from special request field.
     let user = res.locals;
     let userPermissions = new Permissions(user.login, ADMINS_GROUP.roles);
-    winston.log("info", "Single user and Admin permissions checking, permissions: %j\r\n user: %j", userPermissions, user);
+    log.info("Single user and Admin permissions checking, permissions: %j\r\n user: %j", userPermissions, user);
     checkPermissions(userPermissions, user, req, res, next);
 };

@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const jwt = require('jwt-simple');
 const HttpStatus = require('http-status-codes');
 const nconf = require('nconf');
-const winston = require('winston');
+const log = require('../utils/logger')(module);
 
 /** read configuration*/
 nconf.reset();
@@ -25,7 +25,7 @@ const SECRET_KEY = nconf.get("security:secret");
  */
 module.exports = function (req, res, next) {
     let authToken = req.headers.authorization;
-    winston.info("Auth token from client:%s", authToken);
+    log.info("Auth token from client: %s", authToken);
 
     if (authToken) {
         //decode jwt token
@@ -38,7 +38,7 @@ module.exports = function (req, res, next) {
 
         //validate that login && password presents
         if (!jwtDecodeErrorFlag && decodedJWT.login && decodedJWT.password) {
-            winston.info("user fields are valid, trying to find user with login %s in DB", decodedJWT.login);
+            log.info("user fields are valid, trying to find user with login %s in DB", decodedJWT.login);
 
             /** retrieve user from DB*/
             mongoose.model('User').findOne({login: decodedJWT.login}, function (err, user) {

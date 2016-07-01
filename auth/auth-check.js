@@ -3,7 +3,7 @@
  */
 var jwt = require('jwt-simple');
 var mongoose = require('mongoose');
-var databaseConfig = require('../utils/database-connect'); // get db config file
+const log = require('../utils/logger')(module);
 const nconf = require('nconf');
 
 /** read configuration*/
@@ -26,15 +26,16 @@ module.exports = {
     checkAuthToken:function (jwtToken, unAuthorizedCallback, authorizedCallback) {        
         if (!jwtToken) return unAuthorizedCallback();
 
-        var encodedToken = jwtToken.split(' ')[1];
+        //var encodedToken = jwtToken.split(' ')[1];
+
         try {
-            var tokenUser = jwt.decode(encodedToken, SECRET_KEY);
+            var tokenUser = jwt.decode(jwtToken, SECRET_KEY);
         } catch (err){
-            console.error(err)
+            log.error(err)
         }
 
         /** fetch user from DB by login from jwtToken*/
-        mongoose.model('UserModel').findOne({
+        mongoose.model('User').findOne({
             login: tokenUser.login
         }, function (err, dbUser) {
             if (err) throw err;

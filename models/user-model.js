@@ -9,7 +9,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const nconf = require('nconf');
-const logger = require('../utils/logger');
 const log = require('../utils/logger')(module);
 
 /** read configuration*/

@@ -1,6 +1,6 @@
 /**
  * Cache for all chat messages.
- * 
+ *
  * @constructor
  */
 function ChatCache() {
@@ -11,7 +11,7 @@ function ChatCache() {
      * Add message to cache.
      *
      * When cache capacity will be reached, old messages will be deleted
-     * @param chatMessageObj chat message
+     * @param chatMessageObj - chat message
      */
     this.pushMessage = function (chatMessageObj) {
         if (this.messages.length >= this._MESSAGES_CACHE_CAPACITY)

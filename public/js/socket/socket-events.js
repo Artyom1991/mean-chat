@@ -2,56 +2,62 @@
 var socket = io();
 
 /** get actual token from session storage*/
-var token = TokenHandler.getToken();
+let authToken = TokenHandler.getToken();
 
-var chatMessagesUl = $('#chatMessagesUl');
-var chatMembersUl = $('#chatMembersUl');
+let chatMessagesUl = $('#chatMessagesUl');
+let chatMembersUl = $('#chatMembersUl');
 
 /** subscribe on "connect" event*/
 socket.on('connect', function () {
-    /** try to authenticate*/
-    socket.emit('authentication', token);
+    /**
+     * Try to authenticate
+     *
+     * Check that auth token exists in session storage.
+     */
+    if (authToken) {
+        socket.emit('authentication', authToken);
 
-    /** subscribe on authorized event*/
-    socket.on('successfully authenticated', function (resp) {
-        console.info("socket.io authenticated event: %s", resp);
+        /** subscribe on authorized event*/
+        socket.on('successfully authenticated', function (resp) {
+            console.info("socket.io authenticated event: %s", resp);
 
-        /** subscribe on receive all previous messages show for new connected user*/
-        socket.on('all previous messages cache', function (messages) {
-            if (messages instanceof Array) {
-                messages.forEach((message)=> {
-                    chatMessagesUl.append(liFromChatMessage(message));
-                })
-            } else console.error("Something wrong, expect JSON array of message objects, but received: %s", messages);
+            /** subscribe on receive all previous messages show for new connected user*/
+            socket.on('all previous messages cache', function (messages) {
+                if (messages instanceof Array) {
+                    messages.forEach((message)=> {
+                        chatMessagesUl.append(liFromChatMessage(message));
+                    })
+                } else console.error("Something wrong, expect JSON array of message objects, but received: %s", messages);
+            });
+
+            /** subscribe on members list change event */
+            socket.on('chat members list change', function (membersList) {
+                console.log(membersList);
+
+                //refresh members list
+                chatMembersUl.empty();
+                chatMembersUl.append(liNodesFromChatMembers(membersList));
+            });
+
+            /** while new message from server event, add message to page*/
+            socket.on('chat message created', function (msgObj) {
+                //console.log("event: %s, obj:%j", "chat message created", msgObj);
+                chatMessagesUl.append(liFromChatMessage(msgObj));
+            });
         });
 
-        /** subscribe on members list change event */
-        socket.on('chat members list change', function (membersList) {
-            console.log(membersList);
-
-            //refresh members list
-            chatMembersUl.empty();
-            chatMembersUl.append(liNodesFromChatMembers(membersList));
+        /** subscribe on authorization failed event*/
+        socket.on('authorization failed', function (resp) {
+            console.error("socket.io authenticated failed: %s", resp);
         });
-
-        /** while new message from server event, add message to page*/
-        socket.on('chat message created', function (msgObj) {
-            //console.log("event: %s, obj:%j", "chat message created", msgObj);
-            chatMessagesUl.append(liFromChatMessage(msgObj));
-        });
-    });
-
-    /** subscribe on authorization failed event*/
-    socket.on('authorization failed', function (resp) {
-        console.error("socket.io authenticated failed: %s", resp);
-    });
+    } else
+        console.warn("Socket connect event, but no auth token in session storage");
 });
 
-var chatMessageInput = $('#chatMessageInput');
+const chatMessageInput = $('#chatMessageInput');
+const sendMessageButton = $('#chatSendMessageButton');
 
-var sendMessageButton = $('#chatSendMessageButton');
-
-/** send message from input to server*/
+/** send message from input field to server by sockets*/
 //while send button clicked
 sendMessageButton.click(function () {
     socket.emit('chat message', chatMessageInput.val());
@@ -61,8 +67,10 @@ sendMessageButton.click(function () {
 
 //or "enter" key pressed while focused on input.
 chatMessageInput.keydown(function (e) {
+    const ENTER_BUTTON_CODE = 13;
+
     var key = e.which;
-    if(key == 13)  // the enter key code
+    if (key == ENTER_BUTTON_CODE)  // the enter key code
     {
         sendMessageButton.click();
         //return false;
@@ -93,8 +101,8 @@ function liFromChatMessage(chatMessageObj) {
  * @param chatMembers - user arr.
  * @returns {*} array of <li> elements with users logins.
  */
-function liNodesFromChatMembers(chatMembers){
-    return $.map(chatMembers,function (member) {
-        return $('<li>',{class: "list-group-item"}).html(member);
+function liNodesFromChatMembers(chatMembers) {
+    return $.map(chatMembers, function (member) {
+        return $('<li>', {class: "list-group-item"}).html(member);
     });
 }
