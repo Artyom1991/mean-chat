@@ -10,6 +10,7 @@
     <!--styles-->
     <!--link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"-->
     <link rel="stylesheet" href="bower_components/bootswatch-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="css/custom-classes.css">
     <!--scripts-->
     <!--script src="bower_components/angular/angular.js"></script-->
     <script src="bower_components/jquery/dist/jquery.js"></script>
@@ -29,11 +30,22 @@
     <div id="navBarContainer"></div>
 </header>
 <!-- Page Content -->
-<section class="container">
+<section class="container-fluid">
     <article class="row flex-row">
+        <!--online users list-->
+        <section class="col-md-3 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Members</div>
+                <div class="panel-body">
+                    <ul class="list-group" id="chatMembersUl">
+                    </ul>
+                </div>
+            </div>
+        </section>
+
         <!--chat window-->
-        <section class="col-xs-9">
-            <div class="panel panel-default flex-col">
+        <section class="col-md-9 col-sm-12 full-container-height">
+            <div class="panel panel-default flex-col full-container-height">
                 <div class="panel-heading">Messages</div>
                 <div class="panel-body flex-grow">
                     <ul class="list-group" id="chatMessagesUl">
@@ -52,16 +64,7 @@
             </div>
         </section>
 
-        <!--online users list-->
-        <section class="col-xs-3">
-            <div class="panel panel-default">
-                <div class="panel-heading">Members</div>
-                <div class="panel-body">
-                    <ul class="list-group" id="chatMembersUl">
-                    </ul>
-                </div>
-            </div>
-        </section>
+
     </article>
 </section>
 </body>
