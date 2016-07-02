@@ -1,6 +1,7 @@
 /**
  * Users REST API implementation.
  */
+"use strict";
 const express = require('express');
 const mongoose = require('mongoose');
 const jwt = require('jwt-simple');

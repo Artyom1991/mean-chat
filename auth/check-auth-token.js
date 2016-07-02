@@ -1,3 +1,4 @@
+"use strict";
 const jwt = require('jwt-simple');
 const mongoose = require('mongoose');
 const nconf = require('nconf');

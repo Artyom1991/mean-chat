@@ -7,6 +7,7 @@ const winston = require('winston');
  * @param module - module where logger event occurs
  * @returns {*} - logger instance (?)
  */
+"use strict";
 function getLogger(module) {
     var path = module.filename.split('/').slice(-2).join('/');
 

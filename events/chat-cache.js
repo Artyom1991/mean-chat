@@ -3,6 +3,7 @@
  *
  * @constructor
  */
+"use strict";
 function ChatCache() {
     this._MESSAGES_CACHE_CAPACITY = 100;
     this.messages = [];

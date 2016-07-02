@@ -71,6 +71,7 @@ UserSchema.pre('validate', function (next) {
  * Performing before saving User to DB,
  * automatically hash the password before it’s saved to the database.
  */
+"use strict";
 UserSchema.pre('save', function (next) {
     let user = this;
     log.info('User trying to register %s', JSON.stringify(user));

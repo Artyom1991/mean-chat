@@ -6,6 +6,7 @@
  * @param message message text
  * @param userLogin users login
  */
+"use strict";
 function ChatMessage(message, userLogin) {
     this.created = new Date();
     this.message = message;

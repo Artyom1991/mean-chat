@@ -5,6 +5,7 @@
  *
  * @constructor
  */
+"use strict";
 function ChatMembersList() {
     this.members = [];
 

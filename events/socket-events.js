@@ -1,6 +1,7 @@
 /**
  * Socket.io events
  */
+"use strict";
 const util = require('util');
 const ChatMessage = require('../models/chat-message');
 const chatCacheInstance = require('../events/chat-cache');

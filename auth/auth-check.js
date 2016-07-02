@@ -1,6 +1,7 @@
 /**
  * Authenticating user module.
  */
+"use strict";
 var jwt = require('jwt-simple');
 var mongoose = require('mongoose');
 const log = require('../utils/logger')(module);
