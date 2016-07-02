@@ -21,8 +21,8 @@ function ChatMembersList() {
      * @returns {Array} - array of user logins.
      */
     this.getLogins = function () {
-        return this.members.map(function (member) {
-            return member.login;
+        return this.members.map(function (user) {
+            return user.login;
         });
     };
 
@@ -30,9 +30,8 @@ function ChatMembersList() {
      * Remove member from chat members list by login.
      * @param login - member's login to delete.
      */
-    this.removeMemberByLogin = function (login) {
-        this.members.splice(this.members.findIndex(login), 1);
-    }
+    this.removeMemberByLogin =
+        (login)=> this.members.splice(this.members.indexOf(login), 1)
 }
 /** create new single instance of chat members list*/
 var chatMembersList = new ChatMembersList();
