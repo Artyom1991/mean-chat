@@ -22,16 +22,20 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 /** Auth API routing */
 /**
- * @api {post} /sign-in/ Log in system, response with access token: JWT.
+ * @api {post} /sign-in/ Log in to system, response with access token: JWT.
  * @apiGroup Auth
  *
- * @apiParam {string} login - user's login
- * @apiParam {string} password - users's password
+ * @apiParam {string} login user's login
+ * @apiParam {string} password users's password
  *
- * @apiSuccess (200) {Object} JWT token
- * @apiSuccess Success-Response:
+ * @apiSuccess (200) {string} token jwt auth token
+ * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1Nzc1MGY4YWRmYjQyYzg4MjM4ZDhiMzgiLCJjb2RlIjo0OTY5LCJ2ZXJpZmljYXRpb25fc3RhdHVzIjoiYWN0aXZlIiwicm9sZSI6InVzZXIiLCJsb2dpbiI6InRlc3QtdXNlci1zaW1wbGUxIiwibmFtZSI6IlZhc2lsaXkgUHlhdG9jaGtpbiIsImVtYWlsIjoibWFpbDFAZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkSlFrNVouUjJSbWpQZTNlMGJIeGxCLktUZ1Iwc1RsQ0VZS0w5aWhjZ2RwbGx4WE9TUVVnZUMiLCJjb21tZW50cyI6InNvbWUgY29tbWVudHMiLCJfX3YiOjAsImRpc2NvdW50Q291cG9ucyI6W3siX2lkIjoiNTc3NTBmOGFkZmI0MmM4ODIzOGQ4YjM5IiwiZGlzY291bnQiOiIyMCUifV0sImFkZHJlc3NfZGV0YWlscyI6bnVsbH0.kul5pY4ULatBkQk-bljT0aRL05D8VO0u7r5mgLF_WnQ"}
+ *
+ * @apiError (400) NoSuchUser
+ * @apiError (400) NoLoginOrPassword
+ * @apiError (401) WrongPassword
  */
 app.post('/sign-in', require('./routes/auth-api').signIn);
 
@@ -39,8 +43,18 @@ app.post('/sign-in', require('./routes/auth-api').signIn);
  * @api {post} /sign-up/ Register in system.
  * @apiGroup Auth
  *
- * @apiParam {Object} user object in request body
- * @apiSuccess (201) {Object} - new user object
+ * @apiParam {Object} user
+ *
+ * @apiSuccess (201) {string} token jwt auth token
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 201 CREATED
+ *     {"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1Nzc1MGY4YWRmYjQyYzg4MjM4ZDhiMzgiLCJjb2RlIjo0OTY5LCJ2ZXJpZmljYXRpb25fc3RhdHVzIjoiYWN0aXZlIiwicm9sZSI6InVzZXIiLCJsb2dpbiI6InRlc3QtdXNlci1zaW1wbGUxIiwibmFtZSI6IlZhc2lsaXkgUHlhdG9jaGtpbiIsImVtYWlsIjoibWFpbDFAZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkSlFrNVouUjJSbWpQZTNlMGJIeGxCLktUZ1Iwc1RsQ0VZS0w5aWhjZ2RwbGx4WE9TUVVnZUMiLCJjb21tZW50cyI6InNvbWUgY29tbWVudHMiLCJfX3YiOjAsImRpc2NvdW50Q291cG9ucyI6W3siX2lkIjoiNTc3NTBmOGFkZmI0MmM4ODIzOGQ4YjM5IiwiZGlzY291bnQiOiIyMCUifV0sImFkZHJlc3NfZGV0YWlscyI6bnVsbH0.kul5pY4ULatBkQk-bljT0aRL05D8VO0u7r5mgLF_WnQ"}
+ *
+ * @apiError (400) ValidationError invalid fields
+ * @apiError (409) ConflictInDB user with one or more unique fields already exists
+ * @apiErrorExample {json} Error-Response:
+ *     HTTP/1.1 400 Not Found
+ *     {"email":{"message":"Invalid email!","name":"ValidatorError","properties":{"regexp":{},"type":"regexp","message":"Invalid email!","path":"email","value":"admin@a.ruuuuuuuuuuuuuuu"},"kind":"regexp","path":"email","value":"admin@a.ruuuuuuuuuuuuuuu"}}
  */
 app.post('/sign-up', require('./routes/users-api').createNewUser);
 
@@ -52,13 +66,18 @@ app.post('/sign-up', require('./routes/users-api').createNewUser);
  *
  * @apiParam {String} user_login user's login
  *
- * @apiHeader {String} JWT token
+ * @apiHeader {String} token jwt auth token
  * @apiHeaderExample {String} Header-Example:
  *     {
  *       "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1Nzc1MGY4YWRmYjQyYzg4MjM4ZDhiMzgiLCJjb2RlIjo0OTY5LCJ2ZXJpZmljYXRpb25fc3RhdHVzIjoiYWN0aXZlIiwicm9sZSI6InVzZXIiLCJsb2dpbiI6InRlc3QtdXNlci1zaW1wbGUxIiwibmFtZSI6IlZhc2lsaXkgUHlhdG9jaGtpbiIsImVtYWlsIjoibWFpbDFAZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkSlFrNVouUjJSbWpQZTNlMGJIeGxCLktUZ1Iwc1RsQ0VZS0w5aWhjZ2RwbGx4WE9TUVVnZUMiLCJjb21tZW50cyI6InNvbWUgY29tbWVudHMiLCJfX3YiOjAsImRpc2NvdW50Q291cG9ucyI6W3siX2lkIjoiNTc3NTBmOGFkZmI0MmM4ODIzOGQ4YjM5IiwiZGlzY291bnQiOiIyMCUifV0sImFkZHJlc3NfZGV0YWlscyI6bnVsbH0.kul5pY4ULatBkQk-bljT0aRL05D8VO0u7r5mgLF_WnQ"
  *     }
  *
+ * @apiPermission this user of admin
+ *
  * @apiSuccess (200) {json} user
+ *
+ * @apiError (404) NotFound
+ * @apiError (403) Forbidden invalid auth token
  */
 app.get('/api/users/:user_login', require('./routes/users-api').getSingleUser);
 
@@ -67,9 +86,9 @@ app.get('/api/users/:user_login', require('./routes/users-api').getSingleUser);
  * @apiGroup User
  *
  * @apiParam {String} user_login user's login
- * @apiParam {Object} user object in request body
+ * @apiParam {Object} user new user
  *
- * @apiHeader {String} JWT token
+ * @apiHeader {String} token jwt auth token
  * @apiHeaderExample {String} Header-Example:
  *     {
  *       "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1Nzc1MGY4YWRmYjQyYzg4MjM4ZDhiMzgiLCJjb2RlIjo0OTY5LCJ2ZXJpZmljYXRpb25fc3RhdHVzIjoiYWN0aXZlIiwicm9sZSI6InVzZXIiLCJsb2dpbiI6InRlc3QtdXNlci1zaW1wbGUxIiwibmFtZSI6IlZhc2lsaXkgUHlhdG9jaGtpbiIsImVtYWlsIjoibWFpbDFAZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkSlFrNVouUjJSbWpQZTNlMGJIeGxCLktUZ1Iwc1RsQ0VZS0w5aWhjZ2RwbGx4WE9TUVVnZUMiLCJjb21tZW50cyI6InNvbWUgY29tbWVudHMiLCJfX3YiOjAsImRpc2NvdW50Q291cG9ucyI6W3siX2lkIjoiNTc3NTBmOGFkZmI0MmM4ODIzOGQ4YjM5IiwiZGlzY291bnQiOiIyMCUifV0sImFkZHJlc3NfZGV0YWlscyI6bnVsbH0.kul5pY4ULatBkQk-bljT0aRL05D8VO0u7r5mgLF_WnQ"
@@ -79,6 +98,10 @@ app.get('/api/users/:user_login', require('./routes/users-api').getSingleUser);
  * @apiPermission this user of admin
  *
  * @apiSuccess (200) {json} new user
+ *
+ * @apiError (400) BadRequest
+ * @apiError (404) NotFound
+ * @apiError (403) Forbidden invalid auth token
  */
 app.put('/api/users/:user_login', require('./routes/users-api').replaceUserByNew);
 
@@ -88,13 +111,16 @@ app.put('/api/users/:user_login', require('./routes/users-api').replaceUserByNew
  *
  * @apiParam {String} user_login user's login
  *
- * @apiHeader {String} JWT token
+ * @apiHeader {String} token jwt auth token
  * @apiHeaderExample {String} Header-Example:
  *     {
  *       "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1Nzc1MGY4YWRmYjQyYzg4MjM4ZDhiMzgiLCJjb2RlIjo0OTY5LCJ2ZXJpZmljYXRpb25fc3RhdHVzIjoiYWN0aXZlIiwicm9sZSI6InVzZXIiLCJsb2dpbiI6InRlc3QtdXNlci1zaW1wbGUxIiwibmFtZSI6IlZhc2lsaXkgUHlhdG9jaGtpbiIsImVtYWlsIjoibWFpbDFAZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkSlFrNVouUjJSbWpQZTNlMGJIeGxCLktUZ1Iwc1RsQ0VZS0w5aWhjZ2RwbGx4WE9TUVVnZUMiLCJjb21tZW50cyI6InNvbWUgY29tbWVudHMiLCJfX3YiOjAsImRpc2NvdW50Q291cG9ucyI6W3siX2lkIjoiNTc3NTBmOGFkZmI0MmM4ODIzOGQ4YjM5IiwiZGlzY291bnQiOiIyMCUifV0sImFkZHJlc3NfZGV0YWlscyI6bnVsbH0.kul5pY4ULatBkQk-bljT0aRL05D8VO0u7r5mgLF_WnQ"
  *     }
  *
  * @apiPermission this user of admin
+ *
+ * @apiError (403) Forbidden invalid auth token
+ * @apiError (404) NotFound
  */
 app.delete('/api/users/:user_login', require('./routes/users-api').deleteSingleUser);
 
@@ -102,7 +128,7 @@ app.delete('/api/users/:user_login', require('./routes/users-api').deleteSingleU
  * @api {get} /api/users/ Get all users from DB.
  * @apiGroup Admin
  *
- * @apiHeader {String} JWT token
+ * @apiHeader {String} token jwt auth token
  * @apiHeaderExample {String} Header-Example:
  *     {
  *       "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1Nzc1MGY4YWRmYjQyYzg4MjM4ZDhiMzgiLCJjb2RlIjo0OTY5LCJ2ZXJpZmljYXRpb25fc3RhdHVzIjoiYWN0aXZlIiwicm9sZSI6InVzZXIiLCJsb2dpbiI6InRlc3QtdXNlci1zaW1wbGUxIiwibmFtZSI6IlZhc2lsaXkgUHlhdG9jaGtpbiIsImVtYWlsIjoibWFpbDFAZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkSlFrNVouUjJSbWpQZTNlMGJIeGxCLktUZ1Iwc1RsQ0VZS0w5aWhjZ2RwbGx4WE9TUVVnZUMiLCJjb21tZW50cyI6InNvbWUgY29tbWVudHMiLCJfX3YiOjAsImRpc2NvdW50Q291cG9ucyI6W3siX2lkIjoiNTc3NTBmOGFkZmI0MmM4ODIzOGQ4YjM5IiwiZGlzY291bnQiOiIyMCUifV0sImFkZHJlc3NfZGV0YWlscyI6bnVsbH0.kul5pY4ULatBkQk-bljT0aRL05D8VO0u7r5mgLF_WnQ"
@@ -110,7 +136,10 @@ app.delete('/api/users/:user_login', require('./routes/users-api').deleteSingleU
  *
  * @apiPermission admin
  *
- * @apiSuccess (200) {Array} array of users
+ * @apiSuccess (200) {Array} users array of users
+ * @apiSuccess (204) NoContent
+ *
+ * @apiError (403) Forbidden invalid auth token
  */
 app.get('/api/users', require('./routes/users-api').getAllUsers);
 

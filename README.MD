@@ -5,13 +5,16 @@ Simple Node js chat on MEAN stack.
 
 ##Features
 * [x] Allow users to sign-in/sign-up.
-* [ ] Social integration: sign-in/sign-up by vk.com.
+* [ ] Social integration: sign-in/sign-up by vk.com or facebook.
 * [x] Chat with each other in real-time (socket.io provided feature).
 * [x] See actual list of chat members.
 * [x] List of all registered users for admin.
 * [x] Jasmine tests.
 
 ## API definition
+
+[Detailed API specification, made by apiDoc tool](https://fierce-crag-68010.herokuapp.com/doc/)
+
 ### Auth
 * [x] POST [/sign-up]() - register.
 * [x] POST [/sign-in]() - sign in.
@@ -59,5 +62,8 @@ Test user access:
 
 Generate [apiDoc](http://apidocjs.com/)
     
-    sudo apidoc -i ./ -f "app.js" -o ./doc
+    $ apidoc -i ./ -f "app.js" -o ./public/doc
 
+## License
+
+MIT

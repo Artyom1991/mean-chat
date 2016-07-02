@@ -97,11 +97,11 @@ describe("CRUD", function () {
     /** fetch single user*/
     it("GET single user, returns status code 200", function (done) {
         async.waterfall([
-            function (callback) {
+            function (next) {
                 request.get({
                     headers: {'Authorization': authToken},
                     url: TEST_USER_URL
-                }, callback);
+                }, next);
             },
             function (response, body) {
                 console.log("Response for fetching single user: \r\n%s", body);
@@ -116,7 +116,7 @@ describe("CRUD", function () {
         //update email
         testUser.email = "updatedemal@mail.ru";
         async.waterfall([
-            function (callback) {
+            function (next) {
                 console.log("Sending PUT request with new user %s", JSON.stringify(testUser));
                 request.put({
                     headers: {
@@ -125,7 +125,7 @@ describe("CRUD", function () {
                     },
                     url: TEST_USER_URL,
                     body: JSON.stringify(testUser)
-                }, callback);
+                }, next);
             },
             function (response, body) {
                 console.log("Response for updating single user: \r\n%s", body);
