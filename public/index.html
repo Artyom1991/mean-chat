@@ -33,20 +33,28 @@
     <article class="row flex-row">
         <!--online users list-->
         <section class="col-md-3 col-sm-12">
-            <div class="panel panel-default full-height-panel">
+            <div class="panel panel-default">
                 <div class="panel-heading">Members</div>
-                <div class="panel-body chat-content-container">
+                <div class="panel-body full-screen-txt-container">
                     <ul class="list-group" id="chatMembersUl">
                     </ul>
+                </div>
+                <div class="panel-footer">
+                    <div class="input-group" style="visibility: hidden">
+                        <input type="text" class="form-control">
+                            <span class="input-group-btn">
+                            <button class="btn btn-default" type="button"></button>
+                            </span>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!--chat window-->
         <section class="col-md-9 col-sm-12">
-            <div class="panel panel-default flex-col full-height-panel">
+            <div class="panel panel-default">
                 <div class="panel-heading">Messages</div>
-                <div class="panel-body scroll-bar-enable">
+                <div id="chatMessagesContainer" class="panel-body full-screen-txt-container">
                     <ul class="list-group" id="chatMessagesUl">
                         <li class="list-group-item">Welcome to our chat!</li>
                     </ul>

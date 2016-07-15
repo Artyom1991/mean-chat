@@ -41,8 +41,10 @@ socket.on('connect', function () {
 
             /** while new message from server event, add message to page*/
             socket.on('chat message created', function (msgObj) {
-                //console.log("event: %s, obj:%j", "chat message created", msgObj);
                 chatMessagesUl.append(liFromChatMessage(msgObj));
+                //scroll down
+                let chatMessagesContainer = $("#chatMessagesContainer");
+                chatMessagesContainer.animate({scrollTop: chatMessagesContainer.prop("scrollHeight") - chatMessagesContainer.height()}, "fast");
             });
         });
 
@@ -60,9 +62,9 @@ const sendMessageButton = $('#chatSendMessageButton');
 /** send message from input field to server by sockets*/
 //while send button clicked
 sendMessageButton.click(function () {
-    socket.emit('chat message', chatMessageInput.val());
+    if (chatMessageInput.val() != "")
+        socket.emit('chat message', chatMessageInput.val());
     chatMessageInput.val('');
-    return false;
 });
 
 //or "enter" key pressed while focused on input.
