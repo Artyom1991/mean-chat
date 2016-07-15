@@ -1,7 +1,7 @@
 #MEAN-CHAT
 Simple Node js chat on MEAN stack.
 
-[Chat deployed on heroku](https://fierce-crag-68010.herokuapp.com)
+[Chat deployed on heroku](https://mean-chat-example.herokuapp.com)
 
 ##Features
 * [x] Allow users to sign-in/sign-up.
