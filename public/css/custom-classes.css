@@ -7,7 +7,7 @@ html, body, .container {
 }
 
 .full-screen-txt-container {
-    min-height: 75vh;
+    height: 75vh;
     overflow-y: auto;
     word-break: break-all;
 }
