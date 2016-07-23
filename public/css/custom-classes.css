@@ -1,13 +1,16 @@
-html, body, .container {
+html, body, .container{
     height: 100%;
 }
 
-.full-height {
+.full-height{
     height: 100%;
 }
 
-.full-screen-txt-container {
-    height: 75vh;
-    overflow-y: auto;
-    word-break: break-all;
+.full-height-panel {
+    height: 90vh;
+}
+
+.scroll-bar-enable{
+    height: 94%;
+    overflow:auto;
 }
