@@ -5,10 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="author" content="polesskiy">
+
+    <title>Sign up</title>
 
     <!--styles-->
     <link rel="stylesheet" href="bower_components/bootswatch-dist/css/bootstrap.css">
+
     <!--scripts-->
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/jquery/dist/jquery.js"></script>
@@ -17,18 +20,13 @@
     <script src="js/nav-bar.js"></script>
     <script src="js/auth/token-handler.js"></script>
     <script src="js/auth/sign-up.js"></script>
-
-    <title>Sign up</title>
 </head>
 <body ng-app="SignUpApp">
 
-<header>
-    <!--navigation bar-->
-    <div id="navBarContainer"></div>
-</header>
+<nav id="navBarContainer"></nav>
 
 <section class="container-fluid" ng-controller="UserSignUpCtrl">
-    <article class="col-md-4 col-md-offset-4" role="dialog">
+    <article class="row" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -82,9 +80,7 @@
             </div>
         </div>
     </article>
-
 </section>
-
 </body>
 <script>
     //render nav-bar

@@ -5,7 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="author" content="polesskiy">
+
+    <title>Sign in</title>
 
     <!--styles-->
     <link rel="stylesheet" href="bower_components/bootswatch-dist/css/bootstrap.css">
@@ -17,18 +19,11 @@
     <script src="js/nav-bar.js"></script>
     <script src="js/auth/token-handler.js"></script>
     <script src="js/auth/sign-in.js"></script>
-
-    <title>Sign in</title>
 </head>
 <body ng-app="SignInApp">
-<header>
-    <!--navigation bar-->
-    <div id="navBarContainer"></div>
-</header>
+<nav id="navBarContainer"></nav>
 <section class="container" ng-controller="UserSignInCtrl">
-    <article class="col-sm-4"></article>
-
-    <article class="col-sm-4" role="dialog">
+    <article class="row">
         <div class="modal-dialog">
             <div class="modal-content">
                 <!-- modal header -->
@@ -72,16 +67,8 @@
                 </div>
             </div>
         </div>
-        <!--div ng-show="isAuthenticated">
-            <br>
-            <div>{{message}}</div>
-            <a ng-click="logout()" href="">Logout</a>
-        </div-->
     </article>
-    <article class="col-sm-4"></article>
-
 </section>
-
 </body>
 <script>
     //render nav-bar
