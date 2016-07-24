@@ -29,7 +29,7 @@ myApp.controller('UserSignInCtrl', function ($scope, $http, $window) {
                 TokenHandler.saveToken(data.token);
 
                 //redirect to index
-                window.location.href = '/index.html';
+                window.location.href = '/html/index.html';
             })
             .error(function (data, status, headers, config) {
                 /** erase the token if the user fails to log in*/

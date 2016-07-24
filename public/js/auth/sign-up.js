@@ -22,7 +22,7 @@ myApp.controller('UserSignUpCtrl', function ($scope, $http, $window) {
                     /** save received auth token */
                     TokenHandler.saveToken(data.token);
                     //redirect to index page
-                    window.location.href = '/index.html';
+                    window.location.href = '/html/index.html';
                 })
                 .error(function (resBody, status, headers, config) {
                     console.log("Registration problem, server response: %s\r\nstatus: %d\r\n", JSON.stringify(resBody), status);

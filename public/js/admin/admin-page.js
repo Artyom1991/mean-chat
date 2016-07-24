@@ -9,7 +9,7 @@ adminApp.config(['$routeProvider',
     function($routeProvider) {
         $routeProvider.
         when('/', {
-            templateUrl: 'admin-templates/users-table-template.html',
+            templateUrl: '../../html/admin_templates/users-table-template.html',
             controller: 'UsersCtrl'
         }).
         when('/showUserApiTest', {
@@ -17,7 +17,7 @@ adminApp.config(['$routeProvider',
             controller: 'UsersAPICtrl'
         }).
             when('/showMessages',{
-            templateUrl: 'admin-templates/messages-table-template.html',
+            templateUrl: '../../html/admin_templates/messages-table-template.html',
             controller: 'MessagesCtrl'
         }).
         otherwise({

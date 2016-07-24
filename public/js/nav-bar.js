@@ -19,7 +19,7 @@ class NavigationBar {
         var nav = $('<nav>', {class: "navbar navbar-default"}).append(
             $('<div>', {class: "container-fluid"}).append(
                 $('<div>', {class: "navbar-header"}).append(
-                    $('<a>', {class: "navbar-brand", href: CHAT_URL}).text("Chat!")
+                        $('<a>', {class: "navbar-brand", href: CHAT_URL}).text("Chat!")
                 ),
                 $('<ul>', {class: "nav navbar-nav"}).append(
                     $('<li>').append($('<a>', {href: ADMIN_URL}).text("Admin panel"))
