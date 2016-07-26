@@ -2,6 +2,16 @@
 Simple Node js chat on MEAN stack.
 
 [Chat deployed on heroku](https://mean-chat-example.herokuapp.com)
+[Detailed API specification, made by apiDoc tool](https://mean-chat-example.herokuapp.com/doc/)
+
+Run locally:
+
+    $ git clone https://github.com/polesskiy-dev/mean-chat
+    $ cd mean-chat
+    $ npm install
+    (also npm will invoke bower install in postinstall script)
+
+    # Open in browser http://localhost:3000
 
 ##Features
 * [x] Allow users to sign-in/sign-up.
@@ -11,10 +21,7 @@ Simple Node js chat on MEAN stack.
 * [x] List of all registered users for admin.
 * [x] Jasmine tests.
 
-## API definition
-
-[Detailed API specification, made by apiDoc tool](https://fierce-crag-68010.herokuapp.com/doc/)
-
+## API:
 ### Auth
 * [x] POST [/sign-up]() - register.
 * [x] POST [/sign-in]() - sign in.
@@ -40,15 +47,6 @@ Simple Node js chat on MEAN stack.
 
 [Updating npm](https://docs.npmjs.com/getting-started/installing-node)
 [Manage node version](https://www.npmjs.com/package/n)
-
-To install packages:
-
-    $ git clone https://github.com/polesskiy-dev/mean-chat
-    $ cd mean-chat
-    $ npm install
-    (also npm will invoke bower install in postinstall script)
-
-    # Open browser on http://localhost:3000
 
 Test admin access:
 

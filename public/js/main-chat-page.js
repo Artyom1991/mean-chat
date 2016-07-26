@@ -1,4 +1,4 @@
-const chatApp = angular.module("ChatPageApp", ['ngRoute']);
+const chatApp = angular.module("chatApp", ['ngRoute']);
 
 /**
  * Provider of the $route service.
@@ -9,18 +9,19 @@ chatApp.config(['$routeProvider',
     function($routeProvider) {
         $routeProvider.
         when('/chat', {
-            templateUrl: './html/chat.html'
+            templateUrl: './chat.html'
             // controller: 'ChatCtrl'
         }).
         when('/sign-in',{
-            templateUrl: './html/sign-in.html'
-            // controller: 'SignInCtrl'
+            templateUrl: './html/auth_templates/sign-in.html',
+            controller: 'SignInCtrl'
         }).
         when('/sign-up',{
-            templateUrl: './html/sign-up.html'
-            // controller: 'SignUpCtrl'
+            templateUrl: './html/auth_templates/sign-up.html',
+            controller: 'SignUpCtrl'
         }).
         otherwise({
-            redirectTo: '/'
+            templateUrl: './chat.html'
+            // controller: 'ChatCtrl'
         });
     }]);

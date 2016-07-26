@@ -2,7 +2,7 @@
 var socket = io();
 
 /** get actual token from session storage*/
-let authToken = TokenHandler.getToken();
+let authToken = AuthTokenHandler.getToken();
 
 let chatMessagesUl = $('#chatMessagesUl');
 let chatMembersUl = $('#chatMembersUl');
@@ -56,6 +56,9 @@ socket.on('connect', function () {
         console.warn("Socket connect event, but no auth token in session storage");
 });
 
+/**
+ * Assign events
+ */
 const chatMessageInput = $('#chatMessageInput');
 const sendMessageButton = $('#chatSendMessageButton');
 

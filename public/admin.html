@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+
+    <!--styles-->
+    <link rel="stylesheet" href="bower_components/bootswatch-dist/css/bootstrap.css">
+    <!--scripts-->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <!---->
+    <script src="js/auth/token-handler.js"></script>
+    <script src="js/nav-bar.js"></script>
+    <script src="js/admin/admin-page.js"></script>
+
+</head>
+<body ng-app="AdminPageApp">
+<header>
+    <!--navigation bar-->
+    <div id="navBarContainer"></div>
+</header>
+<div class="container">
+    <section class="row">
+        <article class="col-sm-3">
+            <!--admin control panel-->
+            <ul class="nav">
+                <li><a href="#/">Users</a></li>
+                <li><a href="#/showUserApiTest">Users API tests</a></li>
+                <li><a href="#/showMessages">Messages</a></li>
+            </ul>
+        </article>
+
+        <section class="col-sm-9">
+            <div ng-view></div>
+        </section>
+    </section>
+</div>
+</body>
+</html>

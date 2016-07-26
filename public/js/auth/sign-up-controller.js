@@ -1,9 +1,9 @@
-var myApp = angular.module('SignUpApp', []);
-const BAD_REQUEST = 400;
-const CONFLICT = 409;
+const chatApp = angular.module("chatApp", []);
 
-myApp.controller('UserSignUpCtrl', function ($scope, $http, $window) {
+chatApp.controller('SignUpCtrl', function ($scope, $http, $window) {
     const SIGN_UP_URL = "/sign-up";
+    const BAD_REQUEST = 400;
+    const CONFLICT = 409;
 
     $scope.user = {
         login: '',
@@ -20,9 +20,9 @@ myApp.controller('UserSignUpCtrl', function ($scope, $http, $window) {
                 .post(SIGN_UP_URL, $scope.user)
                 .success(function (data, status, headers, config) {
                     /** save received auth token */
-                    TokenHandler.saveToken(data.token);
+                    AuthTokenHandler.saveToken(data.token);
                     //redirect to index page
-                    window.location.href = '/html/index.html';
+                    window.location.href = '/index.html';
                 })
                 .error(function (resBody, status, headers, config) {
                     console.log("Registration problem, server response: %s\r\nstatus: %d\r\n", JSON.stringify(resBody), status);

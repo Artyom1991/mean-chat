@@ -4,7 +4,7 @@
  * @namespace
  * @type {{saveToken, getUserProfile, getToken}}
  */
-var TokenHandler = (function () {
+AuthTokenHandler = (function () {
     /**
      * Parse base64 string
      *
@@ -64,6 +64,16 @@ var TokenHandler = (function () {
          */
         getToken: function () {
             return sessionStorage.token;
+        },
+
+        /**
+         * Is auth token exists?
+         *
+         * @returns {boolean}
+         */
+        tokenExists: function () {
+            console.log("is token exists ? invoked");
+            return sessionStorage.token ? true : false;
         }
     }
 }());

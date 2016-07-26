@@ -1,6 +1,6 @@
-var myApp = angular.module('SignInApp', []);
+const chatApp = angular.module("chatApp", []);
 
-myApp.controller('UserSignInCtrl', function ($scope, $http, $window) {
+chatApp.controller('SignInCtrl', function ($scope, $http, $window) {
     const SIGN_IN_URL = "/sign-in";
 
     $scope.user = {
@@ -8,7 +8,6 @@ myApp.controller('UserSignInCtrl', function ($scope, $http, $window) {
         password: ''
     };
 
-    $scope.isAuthenticated = false;
     $scope.welcome = '';
     $scope.message = '';
 
@@ -26,14 +25,17 @@ myApp.controller('UserSignInCtrl', function ($scope, $http, $window) {
             .post(SIGN_IN_URL, $scope.user)
             .success(function (data, status, headers, config) {
                 /** save received token */
-                TokenHandler.saveToken(data.token);
+                // AuthTokenHandler.saveToken(data.token);
+                $scope.saveToken(data.token);
+                //$window.sessionStorage.token = data.token;
 
-                //redirect to index
-                window.location.href = '/html/index.html';
+                //redirect to main chat window
+                $window.location.href = '#chat';
+
             })
             .error(function (data, status, headers, config) {
                 /** erase the token if the user fails to log in*/
-                delete $window.sessionStorage.token;
+                $scope.removeToken();
 
                 // Handle login errors here
                 $scope.loginErrorMessage = 'Error: Invalid login or password';
@@ -45,7 +47,7 @@ myApp.controller('UserSignInCtrl', function ($scope, $http, $window) {
 /**
  * Some angular magic.
  */
-myApp.factory('authInterceptor', function ($rootScope, $q, $window) {
+chatApp.factory('authInterceptor', function ($rootScope, $q, $window) {
     return {
         request: function (config) {
             config.headers = config.headers || {};
@@ -63,6 +65,6 @@ myApp.factory('authInterceptor', function ($rootScope, $q, $window) {
     };
 });
 
-myApp.config(function ($httpProvider) {
+chatApp.config(function ($httpProvider) {
     $httpProvider.interceptors.push('authInterceptor');
 });
