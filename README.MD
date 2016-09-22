@@ -13,7 +13,7 @@ Simple Node js chat on MEAN stack.
 
 ## API definition
 
-[Detailed API specification, made by apiDoc tool](https://fierce-crag-68010.herokuapp.com/doc/)
+[Detailed API specification, made by apiDoc tool](https://mean-chat-example.herokuapp.com/doc/)
 
 ### Auth
 * [x] POST [/sign-up]() - register.
